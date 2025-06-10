@@ -56,9 +56,10 @@ Contains configuration options for the project and is called the app config. The
    npx expo start
    ```
 
-From here a QR code should appear in the terminal, either scan it using the Expo Go app (Android) or scan it normally (IOS).
+3. From here a QR code should appear in the terminal, either scan it using the Expo Go app (Android) or scan it normally (IOS).
 
-Finally, you should be able to our mobile app for development purposes. You can also shut down your local deployment server by pressing Ctrl+C in the terminal where you activated it.
+
+4. Finally, you should be able to our mobile app for development purposes. You can also shut down your local deployment server by pressing Ctrl+C in the terminal where you activated it.
 
 ## Learning Material
 
