@@ -4,36 +4,36 @@ This was created to serve as the mobile version of our Orlando Connectivity App.
 
 ## Acknowledgments
 
-**/app & /app/(tabs)**
+>**/app & /app/(tabs)**
 
 Contains the app's navigation, which is file-based. The file structure of the app directory determines the app's navigation.
 
 The app has two routes defined by two files: app/(tabs)/index.tsx and app/(tabs)/explore.tsx. The layout file in app/(tabs)/_layout.tsx sets up the tab navigator.
 
-**/assets**
+>**/assets**
 
 The assets directory contains adaptive-icon.png used for Android and an icon.png used for iOS as app icons. It also contains splash.png which is an image for the project's splash screen and a favicon.png if the app runs in a browser.
 
-**/components & /component/ui**
+>**/components & /component/ui**
 
 Contains React Native components, like ThemedText.tsx, which creates text elements that use the app's color scheme in light and dark modes.
 
 
-**/constants**
+>**/constants**
 
 Contains Colors.ts, which contains a list of color values throughout the app.
 
 
-**/hooks**
+>**/hooks**
 
 Contains [React Hooks](https://react.dev/reference/react/hooks), which allows sharing common behavior between components. For example, useThemeColor() is a hook that returns a color based on the current theme.
 
 
-**/package.json & /package.json**
+>**/package.json & /package.json**
 
 The package.json file contains the project's dependencies, scripts, and metadata. Anytime a new dependency is added to your project, it will be added to this file.
 
-**/app.json**
+>**/app.json**
 
 Contains configuration options for the project and is called the app config. These options change the behavior of your project while developing, building, submitting, and updating your app.
 
@@ -59,7 +59,7 @@ Contains configuration options for the project and is called the app config. The
 3. From here a QR code should appear in the terminal, either scan it using the Expo Go app (Android) or scan it normally (IOS).
 
 
-4. Finally, you should be able to our mobile app for development purposes. You can also shut down your local deployment server by pressing Ctrl+C in the terminal where you activated it.
+4. Finally, you should be able to view our mobile app for development purposes. You can also shut down your local deployment server by pressing Ctrl+C in the terminal where you activated it.
 
 ## Learning Material
 
