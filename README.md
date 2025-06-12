@@ -8,7 +8,7 @@ This was created to serve as the mobile version of our Orlando Connectivity App.
 
 Contains the app's navigation, which is file-based. The file structure of the app directory determines the app's navigation.
 
-The app has two routes defined by two files: app/(tabs)/index.tsx and app/(tabs)/explore.tsx. The layout file in app/(tabs)/_layout.tsx sets up the tab navigator.
+The app has two routes defined by two files: app/(tabs)/index.jsx and app/(tabs)/explore.jsx. The layout file in app/(tabs)/_layout.jsx sets up the tab navigator.
 
 >**/assets**
 
@@ -16,12 +16,12 @@ The assets directory contains adaptive-icon.png used for Android and an icon.png
 
 >**/components & /component/ui**
 
-Contains React Native components, like ThemedText.tsx, which creates text elements that use the app's color scheme in light and dark modes.
+Contains React Native components, like ThemedText.jsx, which creates text elements that use the app's color scheme in light and dark modes.
 
 
 >**/constants**
 
-Contains Colors.ts, which contains a list of color values throughout the app.
+Contains Colors.js, which contains a list of color values throughout the app.
 
 
 >**/hooks**
