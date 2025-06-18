@@ -5,6 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
+    "scheme": "communityconnectivityorlando",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "splash": {
@@ -24,17 +25,6 @@
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
-    },
-    "plugins": [
-      [
-      "expo-font",
-      {
-        "fonts": [
-          "./assets/fonts/InstrumentSans-Italic-VariableFont_wdth,wght.ttf",
-          "./assets/fonts/InstrumentSans-VariableFont_wdth,wght.ttf"
-        ]
-      }
-      ]
-    ]
+    }
   }
 }
