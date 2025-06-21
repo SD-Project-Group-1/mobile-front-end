@@ -1,13 +1,26 @@
-const tintColorYellow = '#fff';
-
 export const Colors = {
-    //Change all of this, this is currently just placeholder...
     default: {
-        text: '#ECEDEE',
-        background: '#151718',
-        tint: tintColorDark,
-        icon: '#9BA1A6',
-        tabIconDefault: '#9BA1A6',
-        tabIconSelected: tintColorDark,
+        background: '#102133',
+        secondary: '#1E1E1E',
+        titlesSelected: '#87FBFF',
+        textWhite: '#FFFFFF',
+        textBlack: '#000000',
+        textBox: '#D9D9D9',
+        textDisabled: '#B2AEAE',
+        banner: "#2A4634",
+        boarder: "#87FBFF",
     },
+
+    button: {
+        default: '#FFD700',
+        text: '#000000',
+    },
+
+    modal: {
+        default: '#1E1E1E',
+        boarder: "#87FBFF",
+        title: '#87FBFF',
+        text: '#FFFFFF',
+        icon: '#FFD700',
+    }
 };
