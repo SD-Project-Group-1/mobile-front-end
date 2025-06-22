@@ -59,7 +59,7 @@ export default function ProfileInfo() {
             />
 
             {/* Account Actions here */}
-            <Text style={[styles.title, {height: 70}]}>Account Actions</Text>
+            <Text style={[styles.title, {height: 90}]}>Account Actions</Text>
         </View>
     );
 }
