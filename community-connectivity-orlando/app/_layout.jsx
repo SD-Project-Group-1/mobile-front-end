@@ -10,6 +10,7 @@ export default function RootLayout() {
     const [loaded, error] = useFonts({
         InstrumentSans: require('../assets/fonts/InstrumentSans-VariableFont_wdth,wght.ttf'),
         InstrumentSansItalic: require('../assets/fonts/InstrumentSans-Italic-VariableFont_wdth,wght.ttf'),
+        InstrumentSansBold: require('../assets/fonts/InstrumentSans-Bold.ttf'),
     });
 
     useEffect(() => {
