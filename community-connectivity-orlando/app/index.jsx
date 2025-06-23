@@ -5,7 +5,7 @@ export default function SignUp() {
     return (
         <View style={styles.container}>
             <Text style={{ fontFamily: 'InstrumentSans' }}>
-                Testing the font! fill lol
+                Testing the font! fill lol lol
             </Text>
             <StatusBar style="auto" />
         </View>
