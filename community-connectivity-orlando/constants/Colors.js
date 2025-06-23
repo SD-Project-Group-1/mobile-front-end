@@ -9,6 +9,7 @@ export const Colors = {
         textDisabled: '#B2AEAE',
         banner: "#2A4634",
         boarder: "#87FBFF",
+        link: "#FFD700",
     },
 
     button: {
