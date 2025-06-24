@@ -10,6 +10,7 @@ export const Colors = {
         banner: "#2A4634",
         boarder: "#87FBFF",
         hover: '#87FBFF',
+        link: "#FFD700",
     },
 
     button: {
