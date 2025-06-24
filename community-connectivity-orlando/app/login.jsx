@@ -1,11 +1,9 @@
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import { Colors } from '../constants/Colors.js';
-import PageHeader from '../components/ui/PageHeader';
 
 export default function Login() {
     return (
         <View style={styles.container}>
-            <PageHeader title="Login" />
             <View style={styles.column}>
                 <Text style={styles.text}>
                     Community Resource Center
