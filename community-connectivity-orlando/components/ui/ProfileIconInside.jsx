@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-
+import {Colors} from "../../constants/Colors";
 export default function ProfileIconInside() {
     return (
             <View style={styles.container}>
@@ -13,7 +13,6 @@ export default function ProfileIconInside() {
 const styles = StyleSheet.create({
     container: {
         position: 'relative',
-        marginTop: 5,
         width: 100,
         height: 100,
         justifyContent: 'center',
@@ -22,18 +21,20 @@ const styles = StyleSheet.create({
     icon: {
         marginTop: 5,
         backgroundColor: '#fff',
-        height: 100,
-        width: 100,
-        borderRadius: 50,
+        height: 90,
+        width: 90,
+        borderRadius: 90 / 2,
     },
     iconButton: {
         position: 'absolute',
-        bottom: -4,
-        right: -7,
-        backgroundColor: '#FFD700',
-        height: 35,
-        width: 35,
-        borderRadius: 17.5,
+        bottom: -2,
+        right: 4,
+        backgroundColor: Colors.button.default,
+        height: 32,
+        width: 32,
+        borderRadius: 32 / 2,
         alignItems: 'center',
+        borderWidth: 2,
+        borderColor: Colors.button.text,
     },
 });

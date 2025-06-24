@@ -1,27 +1,22 @@
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import {Colors} from "../../constants/Colors";
 
-export default function ProfileInfo() {
-    const [firstName, onChangeFirstName] = React.useState('Jane');
-    const [lastName, onChangeLastName] = React.useState('Shmane');
-    const [number, onChangeNumber] = React.useState('(407) 356-1234');
-    const [birthdate, onChangeBirthdate] = React.useState('01/01/1985');
-    const [address, onChangeAddress] = React.useState('444 Epic Universe, Orlando Fl, 32819');
-
+export default function ProfileInfo({ firstName, lastName, number, birthdate, address}) {
     return (
         <View style={styles.container}>
-            <View style={styles.titleRow}>
-                <Text style={styles.title}>Profile Information</Text>
+            <View style={styles.row}>
+                <Text style={styles.titleBold}>Profile Information</Text>
                 <TouchableOpacity>
-                    <Text style={styles.editButton}>Edit profile</Text>
+                    <Text style={styles.editButton}>Edit Profile</Text>
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.fieldRow}>
-                <Text style={styles.titleField}>First Name</Text>
-                <Text style={styles.titleField}>Last Name</Text>
+            <View style={styles.row}>
+                <Text style={styles.title}>First Name</Text>
+                <Text style={styles.title}>Last Name</Text>
             </View>
-            <View style={styles.fieldRow}>
+            <View style={styles.row}>
                 <TextInput
                     style={styles.textBox}
                     value={firstName}
@@ -34,11 +29,11 @@ export default function ProfileInfo() {
                 />
             </View>
 
-            <View style={styles.fieldRow}>
-                <Text style={styles.titleField}>Phone Number</Text>
-                <Text style={styles.titleField}>Date of Birth</Text>
+            <View style={styles.row}>
+                <Text style={styles.title}>Phone Number</Text>
+                <Text style={styles.title}>Date of Birth</Text>
             </View>
-            <View style={styles.fieldRow}>
+            <View style={styles.row}>
                 <TextInput
                     style={styles.textBox}
                     value={number}
@@ -51,67 +46,72 @@ export default function ProfileInfo() {
                 />
             </View>
 
-            <Text style={[styles.titleField, {marginBottom: 6}]}>Address</Text>
-            <TextInput
-                style={styles.textBox}
-                value={address}
-                editable={false}
-            />
+            <View style={styles.row}>
+                <Text style={styles.title}>Address</Text>
+            </View>
+            <View style={styles.row}>
+                <TextInput
+                    style={styles.textBox}
+                    value={address}
+                    editable={false}
+                />
+            </View>
 
-            {/* Account Actions here */}
-            <Text style={[styles.title, {height: 90}]}>Account Actions</Text>
+            <View style={styles.row}>
+                <Text style={styles.titleBold}>Account Actions</Text>
+            </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#1E1E1E',
-        borderColor: '#87FBFF',
+        backgroundColor: Colors.default.secondary,
+        borderColor: Colors.default.border,
         borderWidth: 1,
         borderRadius: 5,
-        padding: 16,
+        padding: 14,
         margin: 16,
     },
-    titleRow: {
+    row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 12,
+        marginBottom: 10,
+        gap: 15,
     },
     title: {
+        flex: 1,
+        fontFamily: 'InstrumentSans',
+        fontSize: 16,
+        color: Colors.default.textWhite,
+    },
+    titleBlack: {
+        flex: 1,
+        fontFamily: 'InstrumentSans',
+        fontSize: 16,
+        color: Colors.default.textBlack,
+    },
+    titleBold: {
         fontFamily: 'InstrumentSans-Bold',
         fontSize: 16,
-        color:'#87FBFF',
+        color: Colors.default.titlesSelected,
     },
     editButton: {
         fontFamily: 'InstrumentSans-Bold',
         fontSize: 14,
-        color: '#FFD700',
-    },
-    fieldRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        gap: 14,
-        marginBottom: 4,
-    },
-    titleField: {
-        flex: 1,
-        fontFamily: 'InstrumentSans',
-        fontSize: 16,
-        color: '#FFFFFF',
-        marginBottom: 2,
+        color: Colors.default.link,
     },
     textBox: {
         flex: 1,
         fontFamily: 'InstrumentSans',
         fontSize: 16,
+        paddingLeft: 10,
         borderColor: '#000000',
-        backgroundColor: '#F2EFEF',
+        backgroundColor: Colors.default.textBox,
         borderWidth: 1,
         borderRadius: 5,
-        paddingHorizontal: 8,
-        paddingVertical: 12,
-        marginBottom: 10,
+        paddingVertical: 11,
     },
+
 });
