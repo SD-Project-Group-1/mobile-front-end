@@ -9,6 +9,7 @@ export const Colors = {
         textDisabled: '#B2AEAE',
         banner: "#2A4634",
         boarder: "#87FBFF",
+        hover: '#87FBFF',
         link: "#FFD700",
     },
 
@@ -23,5 +24,11 @@ export const Colors = {
         title: '#87FBFF',
         text: '#FFFFFF',
         icon: '#FFD700',
+    },
+
+    dropdown: {
+        default:'#FFD700',
+        text: '#000000',
+        selected: '#87FBFF',
     }
 };
