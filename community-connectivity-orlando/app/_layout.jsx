@@ -12,6 +12,7 @@ export default function RootLayout() {
     const [loaded, error] = useFonts({
         InstrumentSans: require('../assets/fonts/InstrumentSans-VariableFont_wdth,wght.ttf'),
         InstrumentSansItalic: require('../assets/fonts/InstrumentSans-Italic-VariableFont_wdth,wght.ttf'),
+        InstrumentSansBold: require('../assets/fonts/InstrumentSans-Bold.ttf'),
     });
 
     useEffect(() => {
@@ -45,8 +46,16 @@ export default function RootLayout() {
                         options={{ title: 'Sign Up' }}
                     />
                     <Stack.Screen
+                        name="login"
+                        options={{ title: 'Login' }}
+                    />
+                    <Stack.Screen
                         name="home"
                         options={{ title: 'Home' }}
+                    />
+                    <Stack.Screen
+                        name="profile"
+                        options={{ title: 'Profile' }}
                     />
                     {/* Add more screens as needed */}
                 </Stack>

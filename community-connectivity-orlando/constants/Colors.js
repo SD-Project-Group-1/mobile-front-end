@@ -5,10 +5,10 @@ export const Colors = {
         titlesSelected: '#87FBFF',
         textWhite: '#FFFFFF',
         textBlack: '#000000',
-        textBox: '#D9D9D9',
+        textBox: '#F2EFEF',
         textDisabled: '#B2AEAE',
         banner: "#2A4634",
-        boarder: "#87FBFF",
+        border: "#87FBFF",
         hover: '#87FBFF',
         link: "#FFD700",
     },
@@ -20,7 +20,7 @@ export const Colors = {
 
     modal: {
         default: '#1E1E1E',
-        boarder: "#87FBFF",
+        border: "#87FBFF",
         title: '#87FBFF',
         text: '#FFFFFF',
         icon: '#FFD700',
