@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import UserInfoPanel from "../components/UserInfoPanel";
-import ProfileInfo from '../components/ui/ProfileInfo';
+import ProfileInfo from '../components/ProfileInfo';
 import { Colors } from "../constants/Colors";
 
 export default function Profile() {
