@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import ProfileIconInside from '../components/ui/ProfileIconInside';
+import ProfileIconInside from './ProfileIconInside';
 import { Colors } from "../constants/Colors";
 export default function UserInfoPanel({ id, firstName, lastName, number, address, email, verify}) {
     return (

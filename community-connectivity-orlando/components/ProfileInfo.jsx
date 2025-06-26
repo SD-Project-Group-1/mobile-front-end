@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import {Colors} from "../../constants/Colors";
+import {Colors} from "../constants/Colors";
 
 export default function ProfileInfo({ firstName, lastName, number, birthdate, address}) {
     return (
