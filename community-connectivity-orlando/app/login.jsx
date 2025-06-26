@@ -1,5 +1,6 @@
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import { Colors } from '../constants/Colors.js';
+import {router} from "expo-router";
 
 export default function Login() {
     return (
@@ -21,7 +22,7 @@ export default function Login() {
                 <TouchableOpacity>
                     <Text style={[styles.link, styles.rightAlign]}>Forgot Password?</Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => router.push('/home')}>
                     <Text style={styles.button}>Login</Text>
                 </TouchableOpacity>
 
@@ -29,7 +30,7 @@ export default function Login() {
                     <Text style={styles.link}>
                         Don't have an account?
                     </Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => router.push('/')}>
                         <Text style={styles.link}>  Sign Up</Text>
                     </TouchableOpacity>
                 </View>
@@ -86,7 +87,6 @@ const styles = StyleSheet.create({
         marginRight: 15,
     },
     button: {
-        fontFamily: 'InstrumentSans-Bold',
         fontSize: 24,
         color: Colors.default.textBlack,
         textAlign: 'center',

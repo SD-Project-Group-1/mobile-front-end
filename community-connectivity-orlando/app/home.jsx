@@ -1,7 +1,4 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-
-
 //import { WelcomeBanner } from '../components/WelcomeBanner';
 //import { ProfileIconHome } from '../components/ProfileIconHome';
 //import { OrderStatus } from '../components/OrderStatus';
@@ -16,7 +13,6 @@ export default function Home() {
             <Text style={{ fontFamily: 'InstrumentSans' }}>
                 Testing the font! fill lol
             </Text>
-            <StatusBar style="auto" />
             <Button
                 title="Test"
                 width={200}
