@@ -69,8 +69,6 @@ export default function Button({
 
 const styles = StyleSheet.create({
     button: {
-        paddingVertical: 12,
-        paddingHorizontal: 24,
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
@@ -86,9 +84,10 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     text: {
-        fontSize: 16,
-        fontWeight: '600',
+        fontSize: 24,
+        fontWeight: 'bold',
         color: Colors.default.button,
+
     },
     primaryText: {
         color: Colors.default.textBlack,
