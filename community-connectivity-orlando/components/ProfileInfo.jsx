@@ -125,15 +125,15 @@ export default function ProfileInfo({ firstName, lastName, number, birthdate, ad
             {/* Account Action Buttons */}
             <View style={styles.rowButton}>
                 <Button
-                    title="    Reset Password"
+                    title={<Text style={styles.buttonText}>     Reset Password</Text>}
                     width={95}
                     height={60}
                     style={styles.button}
                     variant="primary"
-                    onPress={() => router.push('/profile')}
+                    //onPress={() => router.push('/reset')}
                 />
                 <Button
-                    title="Logout"
+                    title={<Text style={styles.buttonText}>Logout</Text>}
                     width={95}
                     height={60}
                     style={styles.button}
@@ -141,10 +141,10 @@ export default function ProfileInfo({ firstName, lastName, number, birthdate, ad
                     onPress={() => router.push('/login')}
                 />
                 <Button
-                    title="  Delete Account"
+                    title={<Text style={styles.buttonText}>   Delete Account</Text>}
                     width={95}  
                     height={60}
-                    style={[styles.button, {paddingHorizontal: 16}]}
+                    style={[styles.button, {paddingHorizontal: 15}]}
                     variant="primary"
                     onPress={handleDeleteAccount}
                 />
@@ -236,6 +236,10 @@ const styles = StyleSheet.create({
     button: {
         paddingVertical: 10,
         paddingHorizontal: 10,
+    },
+    buttonText: {
+        fontFamily: 'InstrumentSans-Bold',
+        fontSize: 16,
     },
     rowButton: {
         flexDirection: 'row',
