@@ -86,6 +86,13 @@ export default function RootLayout() {
                             headerRight: () => <BackButton />,
                         }}
                     />
+                    <Stack.Screen
+                        name="reset"
+                        options={{
+                            title: 'Reset',
+                            headerRight: () => <BackButton />,
+                        }}
+                    />
                     {/* Add more screens as needed */}
                 </Stack>
                 <View
