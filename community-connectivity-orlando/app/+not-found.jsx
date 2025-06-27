@@ -1,13 +1,10 @@
-// app/+not-found.jsx
 import { Text, View, StyleSheet, Button } from 'react-native';
-import { useRouter } from 'expo-router';
 
 //Placeholder this needs changes
 export default function NotFoundScreen() {
-    const router = useRouter();
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Page not found xd</Text>
+            <Text style={styles.text}>Page not found</Text>
             <Button title="Go home" onPress={() => router.push('/')} />
         </View>
     );

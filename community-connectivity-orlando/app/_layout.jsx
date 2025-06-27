@@ -1,9 +1,10 @@
-import {SplashScreen, Stack} from 'expo-router';
+import {SplashScreen, Stack, useRouter} from 'expo-router';
 import { useFonts } from 'expo-font';
 import {SafeAreaProvider, useSafeAreaInsets} from 'react-native-safe-area-context';
 import { useEffect } from 'react';
 import { Colors } from "../constants/Colors"
 import {View} from "react-native";
+import Button from "../components/ui/Button";
 
 
 
@@ -11,6 +12,23 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
     const insets = useSafeAreaInsets();
+
+    const BackButton = () => {
+        const router = useRouter();
+        return <Button
+            title="<"
+            height={40}
+            width={40}
+            onPress={() => router.back()}/>;
+    };
+
+    {/*
+        const createProfileIcon = (navigation) => () => (
+            <ProfileIconHome onPress={() => navigation.navigate('profile')} />
+        );
+    */}
+
+
 
     const [loaded, error] = useFonts({
         InstrumentSans: require('../assets/fonts/InstrumentSans-VariableFont_wdth,wght.ttf'),
@@ -42,11 +60,13 @@ export default function RootLayout() {
                         },
                         headerTintColor: Colors.default.titlesSelected,
                         headerShadowVisible: false,
+                        headerBackVisible: false,
                     }}
                 >
                     <Stack.Screen
                         name="index"
                         options={{ title: 'Sign Up' }}
+
                     />
                     <Stack.Screen
                         name="login"
@@ -54,11 +74,17 @@ export default function RootLayout() {
                     />
                     <Stack.Screen
                         name="home"
-                        options={{ title: 'Home' }}
+                        options={{
+                            title: 'Home',
+                            headerRight: () => <BackButton />,
+                        }}
                     />
                     <Stack.Screen
                         name="profile"
-                        options={{title: 'Profile'}}
+                        options={{
+                            title: 'Profile',
+                            headerRight: () => <BackButton />,
+                        }}
                     />
                     {/* Add more screens as needed */}
                 </Stack>

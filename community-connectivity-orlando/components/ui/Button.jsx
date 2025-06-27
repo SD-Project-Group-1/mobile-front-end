@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: 44,
     },
     primary: {
         backgroundColor: Colors.button.default,
