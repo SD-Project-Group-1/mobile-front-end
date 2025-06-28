@@ -8,11 +8,23 @@ export default function Profile() {
     const [id, setId] = useState('00001');
     const [firstName, setFirstName] = useState('Jane');
     const [lastName, setLastName] = useState('Shmane');
-    const [number, setNumber] = useState('(407) 356-1234');
+    const [phoneNumber, setPhoneNumber] = useState('(407) 356-1234');
     const [birthdate, setBirthdate] = useState('01/01/1985');
     const [address, setAddress] = useState('444 Epic Universe, Orlando Fl, 32819');
     const [email, setEmail] = useState('J.Shmane@this.com');
     const [verify, setVerify] = useState(true);
+
+    // Handle profile edit updates
+    const updateProfile = (updatedUser) => {
+
+        // Update user information
+        setFirstName(updatedUser.firstName);
+        setLastName(updatedUser.lastName);
+        setPhoneNumber(updatedUser.phoneNumber);
+        setBirthdate(updatedUser.birthdate);
+        setAddress(updatedUser.address);
+        setEmail(updatedUser.email);
+    };
 
     return (
         <View style={styles.container}>
@@ -20,7 +32,7 @@ export default function Profile() {
                 id={id}
                 firstName={firstName}
                 lastName={lastName}
-                number={number}
+                phoneNumber={phoneNumber}
                 email={email}
                 address={address}
                 verify={verify}
@@ -28,9 +40,11 @@ export default function Profile() {
             <ProfileInfo
                 firstName={firstName}
                 lastName={lastName}
-                number={number}
+                phoneNumber={phoneNumber}
                 birthdate={birthdate}
                 address={address}
+                email={email}
+                onSave={updateProfile}
             />
         </View>
     );
@@ -40,7 +54,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'flex-start',
-        paddingTop: 5,
+        paddingTop: 18,
         paddingLeft: 12,
         paddingRight: 12,
         backgroundColor: Colors.default.background,
