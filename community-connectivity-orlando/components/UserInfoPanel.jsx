@@ -2,16 +2,21 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import ProfileIconInside from './ProfileIconInside';
 import { Colors } from "../constants/Colors";
-export default function UserInfoPanel({ id, firstName, lastName, number, address, email, verify}) {
+
+export default function UserInfoPanel({ profilePic, id, firstName, lastName, phoneNumber, address, email, verify }) {
     return (
+        // User info panel
         <View style={styles.container}>
-            <ProfileIconInside />
+            <ProfileIconInside 
+                profilePic={profilePic} 
+                firstName={firstName} 
+            />
             <Text style={styles.title}>{firstName} {lastName}</Text>
             <Text style={styles.text}>User ID: {id}</Text>
             <Text style={styles.text}>{address}</Text>
-            <Text style={styles.text}>{number}</Text>
+            <Text style={styles.text}>{phoneNumber}</Text>
             <Text style={styles.text}>{email}</Text>
-            <Text style={styles.text}>{verify ? "Age Verified" :"Age Unverified"}</Text>
+            <Text style={styles.text}>{verify ? "Age Verified" : "Age Unverified"}</Text>
         </View>
     );
 }
@@ -22,22 +27,20 @@ const styles = StyleSheet.create({
         borderColor: Colors.default.border,
         borderWidth: 1,
         borderRadius: 5,
-        padding: 15,
+        padding: 17,
         margin: 16,
-        marginBottom: 9,
-        height: 290,
+        marginBottom: 20,
         alignItems: 'center',
     },
     title: {
-        marginTop: 10,
         textAlign: 'center',
         fontFamily: 'InstrumentSans-Bold',
-        fontSize: 16,
+        fontSize: 18,
         color:Colors.default.titlesSelected,
     },
     text: {
         fontFamily: 'InstrumentSans',
-        fontSize: 11,
+        fontSize: 12,
         color: Colors.default.textWhite,
         marginTop: 10,
     }

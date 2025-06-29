@@ -9,6 +9,7 @@ export default function Button({
                                    width,
                                    height,
                                    style,
+                                   textStyle,
                                    fullWidth = false
                                }) {
     const [isHovered, setIsHovered] = useState(false);
@@ -58,7 +59,8 @@ export default function Button({
                 <Text style={[
                     styles.text,
                     styles[`${variant}Text`],
-                    isHovered && styles[`${variant}TextHover`]
+                    isHovered && styles[`${variant}TextHover`],
+                    textStyle
                 ]}>
                     {title}
                 </Text>

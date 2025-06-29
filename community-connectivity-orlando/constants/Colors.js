@@ -30,5 +30,10 @@ export const Colors = {
         default:'#FFD700',
         text: '#000000',
         selected: '#87FBFF',
-    }
+    },
+
+    banner: {
+        primary: '#2A4634',
+        secondary: '#497A5C',
+    },
 };

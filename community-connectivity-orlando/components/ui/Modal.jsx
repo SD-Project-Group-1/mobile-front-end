@@ -45,7 +45,7 @@ export default function Modal({
                     {size === 'large' && (
                         <View style={styles.buttonRow}>
                             <Button
-                                title="Cancel"
+                                title={<Text style={styles.buttonText}>Cancel</Text>}
                                 onPress={onCancel}
                                 style={styles.button}
                                 variant="primary"
@@ -53,9 +53,9 @@ export default function Modal({
                                 height={60}
                             />
                             <Button
-                                title="Confirm Delete"
+                                title={<Text style={styles.buttonText}>Confirm Delete</Text>}
                                 onPress={onConfirm}
-                                style={[styles.button, {paddingHorizontal: 17}]}
+                                style={[styles.button, {paddingHorizontal: 16}]}
                                 variant="primary"
                                 width={95}
                                 height={60}
@@ -118,5 +118,9 @@ const styles = StyleSheet.create({
   button: {
     paddingVertical: 10,
     paddingHorizontal: 10,
+  },
+  buttonText: {
+    fontFamily: 'InstrumentSans-Bold',
+    fontSize: 16,
   },
 }); 

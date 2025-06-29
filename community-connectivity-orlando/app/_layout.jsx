@@ -87,6 +87,13 @@ export default function RootLayout() {
                         }}
                     />
                     <Stack.Screen
+                        name="request"
+                        options={{
+                            title: 'Request',
+                            headerRight: () => <BackButton />,
+                        }}
+                    />
+                    <Stack.Screen
                         name="reset"
                         options={{
                             title: 'Reset',
