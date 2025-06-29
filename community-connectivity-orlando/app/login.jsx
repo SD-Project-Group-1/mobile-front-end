@@ -1,39 +1,116 @@
+import { useState } from 'react';
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import { Colors } from '../constants/Colors.js';
 import {router} from "expo-router";
+import { useForm, Controller } from 'react-hook-form';
 
 export default function Login() {
+    // React Hook Form setup
+    const {
+        control,
+        handleSubmit,
+        formState: {errors},
+        reset
+    } = useForm({
+        defaultValues: {
+            email: '',
+            password: ''
+        }
+    });
+
+    // Handle form submission
+    const onSubmit = (data) => {
+        Alert.alert('Form Submitted', JSON.stringify(data, null, 2));
+        // router.push('/home');
+        reset();
+    };
+
+    // The login form
     return (
         <View style={styles.container}>
-            <View style={styles.column}>
-                <Text style={styles.text}>
-                    Community Resource Center
-                </Text>
-                <Text style={styles.title}>Login to</Text>
-                <Text style={styles.title}>Your Account</Text>
-                <TextInput
-                    style={styles.textBox}
-                    value="Email"
-                />
-                <TextInput
-                    style={styles.textBox}
-                    value="Password"
-                />
-                <TouchableOpacity>
-                    <Text style={[styles.link, styles.rightAlign]}>Forgot Password?</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => router.push('/home')}>
-                    <Text style={styles.button}>Login</Text>
-                </TouchableOpacity>
+            <Text style={styles.text}>Community Resource Center</Text>
+            <Text style={styles.title}>Login to</Text>
+            <Text style={styles.title}>Your Account</Text>
+                
+            {/* Email Field */}
+            <Controller
+                control={control}
+                name="email"
+                rules={{
+                    required: 'Email is required',
+                    pattern: {
+                    value: /^\S+@\S+$/i,
+                        message: 'Invalid email address'
+                    }
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                    <View>
+                        <TextInput
+                            style={[styles.textBox, errors.email && styles.inputError]}
+                            onBlur={onBlur}
+                            onChangeText={onChange}
+                            value={value}
+                            placeholder="Email"
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                        />
+                        {errors.email && (
+                            <Text style={[styles.errorText, {marginTop: 15}]}>{errors.email.message}</Text>
+                        )}
+                    </View>
+                )}
+            />
 
-                <View style={styles.row}>
-                    <Text style={styles.link}>
-                        Don't have an account?
-                    </Text>
-                    <TouchableOpacity onPress={() => router.push('/')}>
-                        <Text style={styles.link}>  Sign Up</Text>
-                    </TouchableOpacity>
-                </View>
+            {/* Password Field */}
+            <Controller
+                control={control}
+                name="password"
+                rules={{
+                    required: 'Password is required',
+                    minLength: {
+                        value: 8,
+                        message: 'Password must have at least 8 characters'
+                    }
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                    <View>
+                        <TextInput
+                            style={[styles.textBox, errors.password && styles.inputError]}
+                            onBlur={onBlur}
+                            onChangeText={onChange}
+                            value={value}
+                            placeholder="Password"
+                            secureTextEntry={true}
+                        />
+                        {errors.password && (
+                            <Text style={[styles.errorText, {marginTop: 15}]}>{errors.password.message}</Text>
+                        )}
+                    </View>
+                )}
+            />
+
+            {/* Forgot Password Link */}
+            <TouchableOpacity>
+                <Text style={[styles.link, styles.rightAlign]}>Forgot Password?</Text>
+            </TouchableOpacity>
+
+            {/* Login Button */}
+            <TouchableOpacity 
+                onPress={() => {
+                    handleSubmit(onSubmit)();
+                    router.push('/home');
+                }}>
+                <Text style={styles.button}>Login</Text>
+            </TouchableOpacity>
+
+            {/* Sign Up Link */}
+            <View style={styles.row}>
+                <Text style={styles.link}>
+                    Don't have an account?
+                </Text>
+                <TouchableOpacity onPress={() => router.push('/')}>
+                    <Text style={styles.link}>  Sign Up</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -45,9 +122,6 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.default.background,
         paddingTop: 17,
         justifyContent: 'flex-start',
-    },
-    column: {
-        flex: 1,
     },
     text: {
         fontFamily: 'InstrumentSans',
@@ -75,6 +149,16 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.default.textBox,
         fontSize: 16,
         fontFamily: 'InstrumentSans',
+    },
+    inputError: {
+        borderColor: '#ff6b6b',
+        borderWidth: 2,
+    },
+    errorText: {
+        color: '#ff6b6b',
+        fontSize: 16,
+        marginLeft: 25,
+        marginTop: -20,
     },
     link: {
         fontFamily: 'InstrumentSans',
