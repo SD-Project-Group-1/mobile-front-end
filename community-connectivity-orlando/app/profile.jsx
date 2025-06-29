@@ -12,11 +12,11 @@ export default function Profile() {
     const [birthdate, setBirthdate] = useState('01/01/1985');
     const [address, setAddress] = useState('444 Epic Universe, Orlando Fl, 32819');
     const [email, setEmail] = useState('J.Shmane@this.com');
-    const [verify, setVerify] = useState(true);
+    const [verify, setVerify] = useState(false); // Updated to verify user age
+    const [profilePic, setProfilePic] = useState(null);
 
     // Handle profile edit updates
     const updateProfile = (updatedUser) => {
-
         // Update user information
         setFirstName(updatedUser.firstName);
         setLastName(updatedUser.lastName);
@@ -24,6 +24,12 @@ export default function Profile() {
         setBirthdate(updatedUser.birthdate);
         setAddress(updatedUser.address);
         setEmail(updatedUser.email);
+        setProfilePic(updatedUser.profilePic);
+    };
+
+    // Handle profile picture updates
+    const updateProfilePic = (picture) => {
+        setProfilePic(picture);
     };
 
     return (
@@ -36,6 +42,7 @@ export default function Profile() {
                 email={email}
                 address={address}
                 verify={verify}
+                profilePic={updateProfilePic}
             />
             <ProfileInfo
                 firstName={firstName}
