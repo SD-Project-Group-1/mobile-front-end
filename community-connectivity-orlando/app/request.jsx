@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
 //import Dropdown from '../components/ui/Dropdown';
@@ -13,7 +12,6 @@ export default function Request() {
             <Text style={{ fontFamily: 'InstrumentSans' }}>
                 Testing the font! fill lol
             </Text>
-            <StatusBar style="auto" />
             <Button
                 title="Test"
                 width={200}
