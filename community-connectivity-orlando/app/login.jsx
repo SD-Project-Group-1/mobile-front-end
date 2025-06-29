@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import { Colors } from '../constants/Colors.js';
+import Button from '../components/ui/Button.jsx';
 import {router} from "expo-router";
 import { useForm, Controller } from 'react-hook-form';
 
@@ -28,89 +28,92 @@ export default function Login() {
     // The login form
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Community Resource Center</Text>
-            <Text style={styles.title}>Login to</Text>
-            <Text style={styles.title}>Your Account</Text>
-                
-            {/* Email Field */}
-            <Controller
-                control={control}
-                name="email"
-                rules={{
-                    required: 'Email is required',
-                    pattern: {
-                    value: /^\S+@\S+$/i,
-                        message: 'Invalid email address'
-                    }
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                    <View>
-                        <TextInput
-                            style={[styles.textBox, errors.email && styles.inputError]}
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            placeholder="Email"
-                            keyboardType="email-address"
-                            autoCapitalize="none"
-                        />
-                        {errors.email && (
-                            <Text style={[styles.errorText, {marginTop: 15}]}>{errors.email.message}</Text>
-                        )}
-                    </View>
-                )}
-            />
+            <View style={styles.column}>
+                <Text style={styles.text}>Community Resource Center</Text>
+                <Text style={styles.title}>Login to</Text>
+                <Text style={styles.title}>Your Account</Text>
+                    
+                {/* Email Field */}
+                <Controller
+                    control={control}
+                    name="email"
+                    rules={{
+                        required: 'Email is required',
+                        pattern: {
+                        value: /^\S+@\S+$/i,
+                            message: 'Invalid email address'
+                        }
+                    }}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <View>
+                            <TextInput
+                                style={[styles.textBox, errors.email && styles.inputError]}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                placeholder="Email"
+                                keyboardType="email-address"
+                                autoCapitalize="none"
+                            />
+                            {errors.email && (
+                                <Text style={[styles.errorText, {marginTop: 15}]}>{errors.email.message}</Text>
+                            )}
+                        </View>
+                    )}
+                />
 
-            {/* Password Field */}
-            <Controller
-                control={control}
-                name="password"
-                rules={{
-                    required: 'Password is required',
-                    minLength: {
-                        value: 8,
-                        message: 'Password must have at least 8 characters'
-                    }
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                    <View>
-                        <TextInput
-                            style={[styles.textBox, errors.password && styles.inputError]}
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            placeholder="Password"
-                            secureTextEntry={true}
-                        />
-                        {errors.password && (
-                            <Text style={[styles.errorText, {marginTop: 15}]}>{errors.password.message}</Text>
-                        )}
-                    </View>
-                )}
-            />
+                {/* Password Field */}
+                <Controller
+                    control={control}
+                    name="password"
+                    rules={{
+                        required: 'Password is required',
+                        minLength: {
+                            value: 8,
+                            message: 'Password must have at least 8 characters'
+                        }
+                    }}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <View>
+                            <TextInput
+                                style={[styles.textBox, errors.password && styles.inputError]}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                placeholder="Password"
+                                secureTextEntry={true}
+                            />
+                            {errors.password && (
+                                <Text style={[styles.errorText, {marginTop: 15}]}>{errors.password.message}</Text>
+                            )}
+                        </View>
+                    )}
+                />
 
-            {/* Forgot Password Link */}
-            <TouchableOpacity>
-                <Text style={[styles.link, styles.rightAlign]}>Forgot Password?</Text>
-            </TouchableOpacity>
-
-            {/* Login Button */}
-            <TouchableOpacity 
-                onPress={() => {
-                    handleSubmit(onSubmit)();
-                    router.push('/home');
-                }}>
-                <Text style={styles.button}>Login</Text>
-            </TouchableOpacity>
-
-            {/* Sign Up Link */}
-            <View style={styles.row}>
-                <Text style={styles.link}>
-                    Don't have an account?
-                </Text>
-                <TouchableOpacity onPress={() => router.push('/')}>
-                    <Text style={styles.link}>  Sign Up</Text>
+                {/* Forgot Password Link */}
+                <TouchableOpacity>
+                    <Text style={[styles.link, styles.rightAlign]}>Forgot Password?</Text>
                 </TouchableOpacity>
+
+                {/* Login Button */}
+                <Button
+                    title="Login"
+                    height={66}
+                    onPress={() => {
+                        handleSubmit(onSubmit)();
+                        router.push('/home');
+                    }}
+                />
+
+                {/* Sign Up Link */}
+                <View style={styles.row}>
+                    <Text style={styles.link}>
+                        Don't have an account?
+                    </Text>
+                    <TouchableOpacity onPress={() => router.push('/')}>
+                        <Text style={styles.link}>  Sign Up</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );
@@ -122,6 +125,15 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.default.background,
         paddingTop: 17,
         justifyContent: 'flex-start',
+    },
+    column: {
+        flex: 1,
+        marginLeft: 15,
+        marginRight: 15,
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'center',
     },
     text: {
         fontFamily: 'InstrumentSans',
@@ -140,9 +152,7 @@ const styles = StyleSheet.create({
     textBox: {
         height: 45,
         marginTop: 20,
-        marginLeft: 15,
-        marginRight: 15,
-        marginBottom: -10,
+        marginBottom: -13,
         borderWidth: 1,
         borderRadius: 5,
         padding: 10,
@@ -164,25 +174,20 @@ const styles = StyleSheet.create({
         fontFamily: 'InstrumentSans',
         fontSize: 18,
         color: Colors.default.link,
-        marginTop: 15,
+        marginTop: 20,
+        marginBottom: 20,
     },
     rightAlign: {
         textAlign: 'right',
         marginRight: 15,
     },
     button: {
-        fontSize: 24,
-        color: Colors.default.textBlack,
-        textAlign: 'center',
-        marginTop: 35,
-        marginLeft: 15,
-        marginRight: 15,
-        backgroundColor: Colors.button.default,
-        padding: 15,
-        borderRadius: 5,
+        paddingVertical: 10,
+        paddingHorizontal: 10,
     },
-    row: {
-        flexDirection: 'row',
-        justifyContent: 'center',
+    buttonText: {
+        fontFamily: 'InstrumentSans-Bold',
+        fontSize: 16,   
     },
+    
 });
