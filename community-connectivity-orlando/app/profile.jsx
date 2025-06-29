@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'flex-start',
-        paddingTop: 18,
+        paddingTop: 21,
         paddingLeft: 12,
         paddingRight: 12,
         backgroundColor: Colors.default.background,

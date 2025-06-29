@@ -27,8 +27,9 @@ const styles = StyleSheet.create({
         borderColor: Colors.default.border,
         borderWidth: 1,
         borderRadius: 5,
-        padding: 15,
+        padding: 17,
         margin: 16,
+        marginBottom: 20,
         alignItems: 'center',
     },
     title: {

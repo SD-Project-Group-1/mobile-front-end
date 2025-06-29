@@ -6,7 +6,8 @@ import Modal from './ui/Modal';
 import { router } from 'expo-router';
 
 export default function ProfileInfo({ firstName, lastName, phoneNumber, birthdate, address, email, onSave }) {
-    
+    // If true, all fields are editable regardless of reservation, restriction is lifted
+    const [isDisabled, setIsDisabled] = useState(true);
     // User reservation verification state 
     const [hasActiveReservation] = useState(false); // Set to true to test edit and error modal
 
@@ -30,6 +31,10 @@ export default function ProfileInfo({ firstName, lastName, phoneNumber, birthdat
         if (!editProfile) {
             return false;
         }
+        // If isDisabled is true, all fields are editable regardless of reservation
+        if (isDisabled) {
+            return true;
+        }
         if (hasActiveReservation) {
             return field === 'phoneNumber' || field === 'email';
         }
@@ -46,6 +51,10 @@ export default function ProfileInfo({ firstName, lastName, phoneNumber, birthdat
     
     // Show error modal for non-editable fields
     const editFieldModal = (field) => {
+        // If isDisabled is true, don't show error modals for any field
+        if (isDisabled) {
+            return true;
+        }
         if (hasActiveReservation && field !== 'phoneNumber' && field !== 'email') {
             setEditErrorModal(true);
             return false;
@@ -148,6 +157,7 @@ export default function ProfileInfo({ firstName, lastName, phoneNumber, birthdat
                             editable={isFieldEditable('phoneNumber')}
                             onChangeText={(value) => updateProfile('phoneNumber', value)}
                             onPressIn={() => editProfile && !isFieldEditable('phoneNumber') && editFieldModal('phoneNumber')}
+                            keyboardType="phone-pad"
                         />
                         <TextInput
                             style={getFieldStyle('birthdate')}
@@ -155,6 +165,7 @@ export default function ProfileInfo({ firstName, lastName, phoneNumber, birthdat
                             editable={isFieldEditable('birthdate')}
                             onChangeText={(value) => updateProfile('birthdate', value)}
                             onPressIn={() => editProfile && !isFieldEditable('birthdate') && editFieldModal('birthdate')}
+                            keyboardType="numeric"
                         />
                     </View>
 
@@ -172,23 +183,27 @@ export default function ProfileInfo({ firstName, lastName, phoneNumber, birthdat
                         />
                     </View>
                     
-                    {/* Email Field */}
-                    <View style={styles.row}>
-                        <Text style={styles.title}>Email</Text>
-                    </View>
-                    <View style={styles.row}>
-                        <TextInput
-                            style={getFieldStyle('email')}
-                            value={editProfile ? editField.email : email}
-                            editable={isFieldEditable('email')}
-                            onChangeText={(value) => updateProfile('email', value)}
-                            onPressIn={() => editProfile && !isFieldEditable('email') && editFieldModal('email')}
-                        />
-                    </View>
+                    {/* Email edit field shown when editing profile */}
+                    {editProfile && (
+                        <>
+                            <View style={styles.row}>
+                                <Text style={styles.title}>Email</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <TextInput
+                                    style={getFieldStyle('email')}
+                                    value={editProfile ? editField.email : email}
+                                    editable={isFieldEditable('email')}
+                                    onChangeText={(value) => updateProfile('email', value)}
+                                    onPressIn={() => editProfile && !isFieldEditable('email') && editFieldModal('email')}
+                                />
+                            </View>
+                        </>
+                    )}
 
                     {/* Edit Profile buttons shown when editing account */}
                     {editProfile && (
-                        <View style={[styles.rowButton, {marginTop: 23.5}]}>
+                        <View style={[styles.rowButton, {marginTop: 10}]}>
                             <Button
                                 title={<Text style={[styles.buttonText, {fontSize: 20}]}>Save</Text>}
                                 width={145}
@@ -307,7 +322,7 @@ const styles = StyleSheet.create({
         borderColor: Colors.default.border,
         borderWidth: 1,
         borderRadius: 5,
-        padding: 14,
+        padding: 15,
         margin: 16,
         marginTop: 0,
     },
@@ -315,7 +330,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 3,
+        marginBottom: 8,
         gap: 15,
     },
     title: {
