@@ -5,9 +5,14 @@ import PreviousOrder from '../components/PreviousOrder';
 import Button from '../components/ui/Button';
 import {Colors} from "../constants/Colors";
 import { router } from 'expo-router';
+import {useState} from "react";
 
 
 export default function Home() {
+    const [hasOngoingOrder, setHasOngoingOrder] = useState(true);
+    const [pastOrders, setPastOrders] = useState(true);
+
+
     return (
         <View style={styles.container}>
             <ScrollView
@@ -19,39 +24,31 @@ export default function Home() {
                     Order Status
                 </Text>
                 {/* This needs to take in values because currently it's static but not a huge problem */}
-                <OrderStatus/>
+                <OrderStatus
+                    hasOngoingOrder={hasOngoingOrder}
+                />
                 <Text style={styles.title}>
                     Previous Orders
                 </Text>
                 {/* Same Deal as OrderStatus */}
-                <PreviousOrder/>
+                <PreviousOrder
+                    pastOrders={pastOrders}
+                />
             </ScrollView>
 
-            <Button
-                title="Request a Device"
-                width={150}
-                height={50}
-                onPress={() => {
-                    router.push('/request');
-                }}
-                style={{
-                    position: 'absolute',
-                    bottom: 75,
-                    right: 15,
-                    /* Shadow isn't working for some reason but this also isn't super important rn, so I'll handle it another time */
-                    shadowColor: '#000000',
-                    shadowOffset: {
-                        width: 0,
-                        height: 5,
-                    },
-                    shadowOpacity: 0.40,
-                    shadowRadius: 4,
-                    elevation: 5,
-                }}
-                textStyle={{
-                    fontSize: 14,
-                }}
-            />
+            <View style={styles.shadowContainer}>
+                <Button
+                    title="Request a Device"
+                    width={150}
+                    height={50}
+                    onPress={() => {
+                        router.push('/request');
+                    }}
+                    textStyle={{
+                        fontSize: 14,
+                    }}
+                />
+            </View>
         </View>
     );
 }
@@ -73,5 +70,19 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         paddingLeft: 25,
         paddingBottom: 19,
-    }
+    },
+    shadowContainer: {
+        position: 'absolute',
+        bottom: 75,
+        right: 15,
+        shadowColor: '#000000',
+        shadowOffset: {
+            width: 0,
+            height: 5,
+        },
+        shadowOpacity: .4,
+        shadowRadius: 8,
+        elevation: 10, // For Android
+        borderRadius: 10,
+    },
 });

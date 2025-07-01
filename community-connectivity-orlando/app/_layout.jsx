@@ -1,10 +1,12 @@
-import {SplashScreen, Stack, useRouter} from 'expo-router';
+import {router, SplashScreen, Stack, useRouter} from 'expo-router';
 import { useFonts } from 'expo-font';
 import {SafeAreaProvider, useSafeAreaInsets} from 'react-native-safe-area-context';
 import { useEffect } from 'react';
 import { Colors } from "../constants/Colors"
 import {View} from "react-native";
 import Button from "../components/ui/Button";
+import ProfileIconInside from "../components/ProfileIconInside";
+import ProfileIconHome from "../components/ProfileIconHome";
 
 
 
@@ -22,12 +24,10 @@ export default function RootLayout() {
             onPress={() => router.back()}/>;
     };
 
-    {/*
-        const createProfileIcon = (navigation) => () => (
-            <ProfileIconHome onPress={() => navigation.navigate('profile')} />
-        );
-    */}
 
+    const ProfileIcon = () => {
+        return <ProfileIconHome/>;
+    };
 
 
     const [loaded, error] = useFonts({
@@ -76,7 +76,7 @@ export default function RootLayout() {
                         name="home"
                         options={{
                             title: 'Home',
-                            headerRight: () => <BackButton />,
+                            headerRight: () => <ProfileIcon />,
                         }}
                     />
                     <Stack.Screen
@@ -89,7 +89,7 @@ export default function RootLayout() {
                     <Stack.Screen
                         name="request"
                         options={{
-                            title: 'Request',
+                            title: 'Your Order',
                             headerRight: () => <BackButton />,
                         }}
                     />
