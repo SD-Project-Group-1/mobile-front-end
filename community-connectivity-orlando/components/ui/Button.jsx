@@ -18,7 +18,7 @@ export default function Button({
     useEffect(() => {
         Animated.timing(animatedValue, {
             toValue: isHovered ? 1 : 0,
-            duration: 95,
+            duration: 75,
             useNativeDriver: false,
         }).start();
     }, [isHovered]);

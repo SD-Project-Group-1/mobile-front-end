@@ -2,39 +2,51 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import {Colors} from "../constants/Colors";
 
-export default function PreviousOrder() {
+export default function PreviousOrder({ pastOrders }) {
+    if (pastOrders) {
+        return (
+            <View style={styles.container}>
+                {/* Currently this is static but, adding variables should be easy... */}
+                <View style={styles.header}>
+                    <View style={styles.headerLeft}>
+                        <Text style={styles.headerLabel}>ORDER PLACED:</Text>
+                        <Text style={styles.headerValue}>05/08/2025</Text>
+                    </View>
+                    <View style={styles.headerRight}>
+                        <Text style={styles.headerLabel}>ORDER #:</Text>
+                        <Text style={styles.headerValue}>123456789</Text>
+                    </View>
+                </View>
+                <View style={styles.OrderStatus}>
+                    <Text style={styles.statusText}>Returned May 7, 2025</Text>
+                    <Text style={styles.deviceInfo}>Device Name: Dell latitude 3550</Text>
+                    <Text style={styles.deviceInfo}>Device ID: 1234567890</Text>
+                </View>
+                <View style={styles.OrderInformation}>
+                    <View style={styles.leftSection}>
+                        <Text style={styles.reasonLabel}>Reason: School</Text>
+                        <Text style={styles.returnedToLabel}>Returned to:</Text>
+                        <Text style={styles.address}>10002 University Blvd</Text>
+                        <Text style={styles.address}>Orlando, FL 32817</Text>
+                    </View>
+                    <View style={styles.rightSection}>
+                        <Text style={styles.lateLabel}>Late?:</Text>
+                        <Text style={styles.lateValue}>No</Text>
+                    </View>
+                </View>
+            </View>
+        );
+    }
+
     return (
-        <View style={styles.container}>
-            {/* Currently this is static but, adding variables should be easy... */}
-            <View style={styles.header}>
-                <View style={styles.headerLeft}>
-                    <Text style={styles.headerLabel}>ORDER PLACED:</Text>
-                    <Text style={styles.headerValue}>05/08/2025</Text>
-                </View>
-                <View style={styles.headerRight}>
-                    <Text style={styles.headerLabel}>ORDER #:</Text>
-                    <Text style={styles.headerValue}>123456789</Text>
-                </View>
-            </View>
-            <View style={styles.OrderStatus}>
-                <Text style={styles.statusText}>Returned May 7, 2025</Text>
-                <Text style={styles.deviceInfo}>Device Name: Dell latitude 3550</Text>
-                <Text style={styles.deviceInfo}>Device ID: 1234567890</Text>
-            </View>
-            <View style={styles.OrderInformation}>
-                <View style={styles.leftSection}>
-                    <Text style={styles.reasonLabel}>Reason: School</Text>
-                    <Text style={styles.returnedToLabel}>Returned to:</Text>
-                    <Text style={styles.address}>10002 University Blvd</Text>
-                    <Text style={styles.address}>Orlando, FL 32817</Text>
-                </View>
-                <View style={styles.rightSection}>
-                    <Text style={styles.lateLabel}>Late?:</Text>
-                    <Text style={styles.lateValue}>No</Text>
-                </View>
-            </View>
+        <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>
+                No previous orders found.
+            </Text>
         </View>
+
     );
+
 }
 
 const styles = StyleSheet.create({
@@ -128,5 +140,21 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: Colors.default.titlesSelected,
         fontWeight: 'bold',
+    },
+    emptyContainer: {
+        height: 69,
+        backgroundColor: Colors.default.secondary,
+        borderRadius: 5,
+        marginBottom: 9,
+        borderColor: Colors.default.border,
+        borderWidth: 1,
+        marginHorizontal: 15,
+        justifyContent: 'center',
+    },
+    emptyText: {
+        fontWeight: 'bold',
+        fontSize: 20,
+        color: Colors.default.link,
+        textAlign: 'center',
     },
 });

@@ -2,6 +2,8 @@ import { StyleSheet, Text, View } from 'react-native';
 
 //import Dropdown from '../components/ui/Dropdown';
 import Button from '../components/ui/Button';
+import {Colors} from "../constants/Colors";
+import {router} from "expo-router";
 //import PickupDetails from '../components/PickupDetails';
 //import YourInfo from '../components/YourInfo';
 
@@ -9,14 +11,29 @@ import Button from '../components/ui/Button';
 export default function Request() {
     return (
         <View style={styles.container}>
-            <Text style={{ fontFamily: 'InstrumentSans' }}>
+
+            {/* <YourInfo/> */}
+
+            <Text style={styles.title}>
                 Testing the font! fill lol
             </Text>
-            <Button
-                title="Test"
-                width={200}
-                variant="primary"
-            />
+
+            {/*
+            <ScrollView
+                <PickupDetails/>
+            </ScrollView>
+             */}
+
+            <View style={styles.footer}>
+                <View style={styles.buttonContainer}>
+                    <Button
+                        title="Place Order"
+                        height={80}
+                        onPress={() => {
+                            router.push('/home');
+                        }}                    />
+                </View>
+            </View>
         </View>
     );
 }
@@ -24,8 +41,28 @@ export default function Request() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: Colors.default.background,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    title: {
+        fontSize: 20,
+        color: Colors.default.titlesSelected,
+        textAlign: 'left',
+        paddingLeft: 25,
+        paddingBottom: 19,
+    },
+    footer: {
+        position: 'absolute',
+        bottom: 80,
+        borderTopWidth: 1,
+        borderTopColor: Colors.default.border,
+        paddingTop: 19,
+        left: 0,
+        right: 0,
+    },
+    buttonContainer: {
+        flex: 1,
+        paddingHorizontal: 25,
     },
 });
