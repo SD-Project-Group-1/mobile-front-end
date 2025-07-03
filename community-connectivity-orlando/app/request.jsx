@@ -1,28 +1,22 @@
-import { StyleSheet, Text, View } from 'react-native';
-
+import {ScrollView, StyleSheet, View} from 'react-native';
 //import Dropdown from '../components/ui/Dropdown';
 import Button from '../components/ui/Button';
 import {Colors} from "../constants/Colors";
 import {router} from "expo-router";
-//import PickupDetails from '../components/PickupDetails';
-//import YourInfo from '../components/YourInfo';
+import PickupDetails from '../components/PickupDetails';
+import YourInfo from '../components/YourInfo';
 
 
 export default function Request() {
     return (
         <View style={styles.container}>
+            <PickupDetails/>
 
-            {/* <YourInfo/> */}
-
-            <Text style={styles.title}>
-                Testing the font! fill lol
-            </Text>
-
-            {/*
             <ScrollView
-                <PickupDetails/>
+                style={styles.scrollView}
+            >
+                <YourInfo/>
             </ScrollView>
-             */}
 
             <View style={styles.footer}>
                 <View style={styles.buttonContainer}>
@@ -40,10 +34,10 @@ export default function Request() {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor: Colors.default.background,
         alignItems: 'center',
         justifyContent: 'center',
+        flex: 1,
     },
     title: {
         fontSize: 20,
@@ -54,15 +48,24 @@ const styles = StyleSheet.create({
     },
     footer: {
         position: 'absolute',
-        bottom: 80,
+        bottom: 0,
+        left: 0,
+        right: 0,
         borderTopWidth: 1,
         borderTopColor: Colors.default.border,
         paddingTop: 19,
-        left: 0,
-        right: 0,
+        height: 200,
+        backgroundColor: Colors.default.background,
+        zIndex: 1,
+
     },
     buttonContainer: {
         flex: 1,
         paddingHorizontal: 25,
+    },
+    scrollView: {
+        width: '100%',
+        flexGrow: 2,
+        marginBottom: 35,
     },
 });
