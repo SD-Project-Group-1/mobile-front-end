@@ -120,15 +120,12 @@ export default function Dropdown({
 }
 
 const styles = StyleSheet.create({
-    container: {
-        position: 'relative',
-    },
     dropdown: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         borderRadius: 10,
-        paddingHorizontal: 12,
+        paddingHorizontal: 15,
         paddingVertical: 12,
     },
     disabled: {
@@ -148,6 +145,7 @@ const styles = StyleSheet.create({
     },
     overlay: {
         flex: 1,
+        height: '100%',
         backgroundColor: 'rgba(0,0,0,0.5)',
         justifyContent: 'center',
         alignItems: 'center',
