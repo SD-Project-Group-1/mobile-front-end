@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import {Colors} from "../constants/Colors";
 import {useRouter} from "expo-router";
-import Button from '.../components/ui/Button'
+import Button from '../components/ui/Button'
 
 
 export default function ResetPassword(){
@@ -23,7 +23,7 @@ export default function ResetPassword(){
     return(
         <View style ={styles.container}>
             <View style = {styles.card}>
-                <Text style = {styles.label}>Reset Password</Text>
+                <Text style = {styles.title}>Reset Password</Text>
                 <Text style = {styles.subtitle}>Please enter a New Password</Text>
 
                 <Text style = {styles.label}>New Password</Text>
@@ -49,10 +49,11 @@ export default function ResetPassword(){
                 onPress = {handleReset}
                 fullWidth
                 height = {50}
+                style = {styles.buttonSpacing}
                 />
                 
                 </View>
-                </View>
+             </View>
             
     );
 }
@@ -74,17 +75,20 @@ const styles = StyleSheet.create({
     subtitle: {
         color: Colors.default.textWhite,
         textAlign: 'center',
-        marginBottom: 20,    
+        marginBottom: 30,    
+        fontFamily: 'InstrumentSans',
     },
     title: {
         fontSize: 20,
         color: Colors.default.titlesSelected,
         textAlign: 'center',
-        marginBottom: 10,
+        marginBottom: 20,
+        fontFamily: 'InstrumentSans-Bold',
     },
     label:{
         color: Colors.default.textWhite,
-        marginBottom: 6,
+        marginBottom: 18,
+        fontFamily: 'InstrumentSans',
     },
     input:{
         backgroundColor: Colors.default.textBox,
@@ -92,6 +96,12 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 10,
         marginBottom: 16,
+        fontFamily: 'InstrumentSans',
     },
+    buttonSpacing:{
+        marginTop: 20,
+        marginBottom: 10,
+
+    }
 });
 
