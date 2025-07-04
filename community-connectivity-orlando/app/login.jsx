@@ -1,8 +1,9 @@
-import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TextInput, TouchableOpacity, View, Alert} from 'react-native';
 import { Colors } from '../constants/Colors.js';
 import Button from '../components/ui/Button.jsx';
 import {router} from "expo-router";
 import { useForm, Controller } from 'react-hook-form';
+import { authAPI } from '../api/auth.js';
 
 export default function Login() {
     // React Hook Form setup
@@ -19,10 +20,19 @@ export default function Login() {
     });
 
     // Handle form submission
-    const onSubmit = (data) => {
-        Alert.alert('Form Submitted', JSON.stringify(data, null, 2));
-        // router.push('/home');
-        reset();
+    const onSubmit = async (data) => {
+        try {
+            await authAPI.login(data.email, data.password);
+            Alert.alert('Success', 'Login successful!');
+            router.push('/home');
+            reset();
+        } catch (error) {
+            console.error('Login error:', error);
+            Alert.alert(
+                'Login Failed', 
+                error.response?.data || 'Login failed because of an error. Please try again.'
+            );
+        }
     };
 
     // The login form
@@ -51,9 +61,10 @@ export default function Login() {
                                 onBlur={onBlur}
                                 onChangeText={onChange}
                                 value={value}
-                                placeholder="Email"
+                                placeholder="user@example.com"
                                 keyboardType="email-address"
                                 autoCapitalize="none"
+                                placeholderTextColor="gray"
                             />
                             {errors.email && (
                                 <Text style={[styles.errorText, {marginTop: 15}]}>{errors.email.message}</Text>
@@ -82,6 +93,7 @@ export default function Login() {
                                 value={value}
                                 placeholder="Password"
                                 secureTextEntry={true}
+                                placeholderTextColor="gray"
                             />
                             {errors.password && (
                                 <Text style={[styles.errorText, {marginTop: 15}]}>{errors.password.message}</Text>
@@ -99,10 +111,7 @@ export default function Login() {
                 <Button
                     title="Login"
                     height={66}
-                    onPress={() => {
-                        handleSubmit(onSubmit)();
-                        router.push('/home');
-                    }}
+                    onPress={handleSubmit(onSubmit)}
                 />
 
                 {/* Sign Up Link */}
