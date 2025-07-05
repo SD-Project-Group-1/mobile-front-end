@@ -29,7 +29,7 @@ export default function Dropdown({
     useEffect(() => {
         Animated.timing(animatedValue, {
             toValue: shouldAnimate ? 1 : 0,
-            duration: 300, // Adjust duration as needed
+            duration: 100, // Adjust duration as needed
             useNativeDriver: false,
         }).start();
     }, [shouldAnimate]);
@@ -162,16 +162,15 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
     },
     optionHover: {
-        backgroundColor: '#f0f0f0',
+        backgroundColor: '#444444',
     },
     optionSelected: {
-        backgroundColor: Colors.dropdown.selected || '#007AFF',
+        backgroundColor: Colors.dropdown.default,
     },
     optionText: {
         fontSize: 16,
     },
     optionTextSelected: {
-        color: '#fff',
-        fontWeight: '600',
+        color: Colors.default.textBlack,
     },
 });

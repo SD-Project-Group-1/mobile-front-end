@@ -1,9 +1,33 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import {Colors} from "../constants/Colors";
 import Button from '../components/ui/Button';
+import Modal from "./ui/Modal";
 
-export default function OrderStatus({ hasOngoingOrder }) {
+export default function OrderStatus() {
+
+    const [hasActiveCheckout] = useState(false);
+    const [hasOngoingOrder, setHasOngoingOrder] = useState(true);
+
+
+    const [cancelOrderModal, setCancelOrderModal] = useState(false);
+    const [confirmCancelModal, setConfirmCancelModal] = useState(false);
+    const [deviceSupportModal, setDeviceSupportModal] = useState(false);
+    const [returnDeviceModal, setReturnDeviceModal] = useState(false);
+
+
+    const handleConfirmCancel = () => {
+        setCancelOrderModal(false);
+        setConfirmCancelModal(true);
+    };
+
+    const closeModal = () => {
+        setConfirmCancelModal(false);
+        if (!hasActiveCheckout) {
+            setHasOngoingOrder(false);
+        }
+    };
+
     if (hasOngoingOrder) {
         return (
             <View style={styles.container}>
@@ -27,7 +51,7 @@ export default function OrderStatus({ hasOngoingOrder }) {
                 <View style={styles.buttonRow}>
                     <Button
                         title="Cancel Order"
-                        onPress={() => console.log('Left pressed')}
+                        onPress={() => setCancelOrderModal(true)}
                         style={styles.flexButton}
                         textStyle={{
                             fontSize: 10,
@@ -37,7 +61,7 @@ export default function OrderStatus({ hasOngoingOrder }) {
 
                     <Button
                         title="Device Support"
-                        onPress={() => console.log('Return pressed')}
+                        onPress={() => setDeviceSupportModal(true)}
                         style={styles.flexButton}
                         textStyle={{
                             fontSize: 10,
@@ -47,7 +71,7 @@ export default function OrderStatus({ hasOngoingOrder }) {
 
                     <Button
                         title="Return Device"
-                        onPress={() => console.log('Report pressed')}
+                        onPress={() => setReturnDeviceModal(true)}
                         style={styles.flexButton}
                         textStyle={{
                             fontSize: 10,
@@ -55,13 +79,61 @@ export default function OrderStatus({ hasOngoingOrder }) {
                         }}
                     />
 
+
+                    {/* Large Modal for cancel order */}
+                    <Modal
+                        visible={cancelOrderModal}
+                        size="large"
+                        title="Are you sure you want to cancel your order?"
+                        message="This action cannot be undone."
+                        onConfirm={handleConfirmCancel}
+                        onCancel={() => setCancelOrderModal(false)}
+                        onClose={() => setCancelOrderModal(false)}
+                        setTime={3000}
+                    />
+
+                    {/* Regular Model for cancelling order success or error */}
+                    <Modal
+                        visible={confirmCancelModal}
+                        size="regular"
+                        title={hasActiveCheckout ? "Error: Your order cannot be cancelled!" : "Success"}
+                        message={hasActiveCheckout ? "You are currently in possession of a borrowed device."
+                            : "Your order has been cancelled."}
+                        onClose={closeModal}
+                        setTime={3000}
+                    />
+
+                    {/* Regular Modal for device support */}
+                    <Modal
+                        visible={deviceSupportModal}
+                        size="regular"
+                        title={"Info: If you are encountering device issues\n" +
+                            "contact the number below:"}
+                        message={"(407) 574-7177 \n" +
+                            "Availability only on Weekdays from 11:30 AM-10:30 PM"}
+                        onClose={() => setDeviceSupportModal(false)}
+                        setTime={5000}
+                    />
+
+                    {/* Regular Modal for return device */}
+                    <Modal
+                        visible={returnDeviceModal}
+                        size="regular"
+                        title={"Info: Return the device to the following address:"}
+                        message={"10002 University Blvd, Orlando, FL 32817\n" +
+                            "Open only on Weekdays from 11:30 AM-10:30 PM"}
+                        onClose={() => setReturnDeviceModal(false)}
+                        setTime={5000}
+                    />
                 </View>
             </View>
         );
     }
 
+
+
     return (
-        <View style={styles.emptyContainer}>
+    <View style={styles.emptyContainer}>
             <View style={styles.emptyOrder}>
                 <Text style={styles.emptyText}>
                     Ain't Nobody Here but Us Chickens!
@@ -80,7 +152,7 @@ export default function OrderStatus({ hasOngoingOrder }) {
 
 const styles = StyleSheet.create({
     emptyContainer: {
-        height: 69,
+        height: 100,
         backgroundColor: Colors.default.secondary,
         borderRadius: 5,
         marginBottom: 9,

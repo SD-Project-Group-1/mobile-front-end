@@ -1,10 +1,17 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet, TextInput} from 'react-native';
 import {Colors} from "../constants/Colors";
 import Dropdown from '../components/ui/Dropdown';
 
 
 export default function YourInfo() {
+
+    const devices = ['Mobile Hotspot', 'Laptop', 'Tablet'];
+    const reasons = ['Job Search', 'School', 'Training', 'Other'];
+    const [selectedReason, setSelectedReason] = useState('');
+    const [selectedDevice, setSelectedDevice] = useState('');
+
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Your info: </Text>
@@ -22,11 +29,18 @@ export default function YourInfo() {
             />
             <Text style={styles.infoDetails}>Reason</Text>
             <Dropdown
+                data={reasons}
                 placeholder={'Reason'}
+                selectedValue={selectedReason}
+                onSelect={(item) => setSelectedReason(typeof item === 'object' ? item.value : item)}
             />
             <Text style={styles.infoDetails}>Device</Text>
             <Dropdown
+                data={devices}
                 placeholder={'Device'}
+                selectedValue={selectedDevice}
+                onSelect={(item) => setSelectedDevice(typeof item === 'object' ? item.value : item)}
+
             />
 
         </View>

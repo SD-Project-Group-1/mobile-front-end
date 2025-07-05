@@ -9,7 +9,6 @@ import {useState} from "react";
 
 
 export default function Home() {
-    const [hasOngoingOrder, setHasOngoingOrder] = useState(true);
     const [pastOrders, setPastOrders] = useState(true);
 
 
@@ -24,9 +23,7 @@ export default function Home() {
                     Order Status
                 </Text>
                 {/* This needs to take in values because currently it's static but not a huge problem */}
-                <OrderStatus
-                    hasOngoingOrder={hasOngoingOrder}
-                />
+                <OrderStatus/>
                 <Text style={styles.title}>
                     Previous Orders
                 </Text>
