@@ -16,8 +16,7 @@ export default function SignUp() {
         reset
     } = useForm({
         defaultValues: {
-            formFName: '',
-            formLName: '',
+            formName: '',
             formEmail: '',
             formPassword: '',
             formDOB: '',
@@ -35,15 +34,15 @@ export default function SignUp() {
         try {
             // Split into first and last name
             const splitName = data.formName.trim().split(' ');
-            const firstName = splitName[0] || '';
-            const lastName = splitName.slice(1).join(' ') || '';
+            const formFName = splitName[0] || '';
+            const formLName = splitName.slice(1).join(' ') || '';
 
             // Transform form data to match backend expectations
             const userData = {
                 email: data.formEmail,
                 password: data.formPassword,
-                first_name: firstName,
-                last_name: lastName,
+                first_name: formFName,
+                last_name: formLName,
                 phone: data.formPhoneNum,
                 street_address: data.formAddress1,
                 city: data.formCity,
@@ -73,10 +72,11 @@ export default function SignUp() {
             <Text style={styles.title}>Account</Text>
 
             <ScrollView style={styles.column}>
+
                 {/* Name Field */}
                 <Controller
                     control={control}
-                    name="formName"
+                    name="formFName"
                     rules={{
                         required: 'Full name is required',
                         minLength: {
@@ -93,11 +93,9 @@ export default function SignUp() {
                         }
                     }}
                     render={({ field: { onChange, onBlur, value } }) => (
-                        <View
-                            style={styles.fieldContainer}
-                        >
+                        <View>
                             <TextInput
-                                style={[styles.input, errors.formName && styles.inputError]}
+                                style={[styles.input, errors.formFName && styles.inputError]}
                                 onBlur={onBlur}
                                 onChangeText={onChange}
                                 value={value}
@@ -105,7 +103,7 @@ export default function SignUp() {
                                 placeholderTextColor="gray"
                             />
                             {errors.formName && (
-                                <Text style={styles.errorText}>{errors.formName.message}</Text>
+                                <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formName.message}</Text>
                             )}
                         </View>
                     )}
@@ -123,7 +121,7 @@ export default function SignUp() {
                         }
                     }}
                     render={({ field: { onChange, onBlur, value } }) => (
-                        <View style={styles.fieldContainer}>
+                        <View>
                             <TextInput
                                 style={[styles.input, errors.formEmail && styles.inputError]}
                                 onBlur={onBlur}
@@ -135,12 +133,11 @@ export default function SignUp() {
                                 placeholderTextColor="gray"
                             />
                             {errors.formEmail && (
-                                <Text style={styles.errorText}>{errors.formEmail.message}</Text>
+                                <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formEmail.message}</Text>
                             )}
                         </View>
                     )}
                 />
-
 
                 {/* Password Field */}
                 <Controller
@@ -150,11 +147,11 @@ export default function SignUp() {
                         required: 'Password is required',
                         minLength: {
                             value: 8,
-                            message: 'Password must be at least 8 characters'
+                            message: 'Password must have at least 8 characters'
                         }
                     }}
                     render={({ field: { onChange, onBlur, value } }) => (
-                        <View style={styles.fieldContainer}>
+                        <View>
                             <TextInput
                                 style={[styles.input, errors.formPassword && styles.inputError]}
                                 onBlur={onBlur}
@@ -165,7 +162,7 @@ export default function SignUp() {
                                 placeholderTextColor="gray"
                             />
                             {errors.formPassword && (
-                                <Text style={styles.errorText}>{errors.formPassword.message}</Text>
+                                <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formPassword.message}</Text>
                             )}
                         </View>
                     )}
@@ -177,9 +174,13 @@ export default function SignUp() {
                     name="formDOB"
                     rules={{
                         required: 'Date of birth is required'
+                        pattern: {
+                            value: /^[0-9+\-\s()]+$/,
+                            message: 'Invalid DOB'
+                        }
                     }}
                     render={({ field: { onChange, onBlur, value } }) => (
-                        <View style={styles.fieldContainer}>
+                        <View>
                             <TextInput
                                 style={[styles.input, errors.formDOB && styles.inputError]}
                                 onBlur={onBlur}
@@ -192,10 +193,11 @@ export default function SignUp() {
                                 placeholderTextColor="gray"
                             />
                             {errors.formDOB && (
-                                <Text style={styles.errorText}>{errors.formDOB.message}</Text>
+                                <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formDOB.message}</Text>
                             )}
                         </View>
                     )}
+
                 />
 
 
@@ -211,7 +213,7 @@ export default function SignUp() {
                         }
                     }}
                     render={({ field: { onChange, onBlur, value } }) => (
-                        <View style={styles.fieldContainer}>
+                        <View>
                             <TextInput
                                 style={[styles.input, errors.formPhoneNum && styles.inputError]}
                                 onBlur={onBlur}
@@ -224,7 +226,7 @@ export default function SignUp() {
                                 minLength={10}
                             />
                             {errors.formPhoneNum && (
-                                <Text style={styles.errorText}>{errors.formPhoneNum.message}</Text>
+                                <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formPhoneNum.message}</Text>
                             )}
                         </View>
                     )}
@@ -235,10 +237,14 @@ export default function SignUp() {
                     control={control}
                     name="formAddress1"
                     rules={{
-                        required: 'Address is required'
+                        required: 'Address is required',
+                        minLength: {
+                            value: 2,
+                            message: 'Name must be at least 2 characters'
+                        }
                     }}
                     render={({ field: { onChange, onBlur, value } }) => (
-                        <View style={styles.fieldContainer}>
+                        <View>
                             <TextInput
                                 style={[styles.input, errors.formAddress1 && styles.inputError]}
                                 onBlur={onBlur}
@@ -248,7 +254,7 @@ export default function SignUp() {
                                 placeholderTextColor="gray"
                             />
                             {errors.formAddress1 && (
-                                <Text style={styles.errorText}>{errors.formAddress1.message}</Text>
+                                <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formAddress1.message}</Text>
                             )}
                         </View>
                     )}
@@ -259,13 +265,13 @@ export default function SignUp() {
                     control={control}
                     name="formAddress2"
                     render={({ field: { onChange, onBlur, value } }) => (
-                        <View style={styles.fieldContainer}>
+                        <View>
                             <TextInput
                                 style={[styles.input]}
                                 onBlur={onBlur}
                                 onChangeText={onChange}
                                 value={value}
-                                placeholder="Address 2"
+                                placeholder="Address 2 (Optional)"
                                 placeholderTextColor="gray"
                             />
                         </View>
@@ -277,12 +283,16 @@ export default function SignUp() {
                     control={control}
                     name="formCity"
                     rules={{
-                        required: 'City is required'
+                        required: 'City is required',
+                        minLength: {
+                            value: 2,
+                            message: 'Name must be at least 2 characters'
+                        }
                     }}
                     render={({ field: { onChange, onBlur, value } }) => (
-                        <View style={styles.fieldContainer}>
+                        <View>
                             <TextInput
-                                style={[styles.input]}
+                                style={[styles.input, errors.formCity && styles.inputError]}
                                 onBlur={onBlur}
                                 onChangeText={onChange}
                                 value={value}
@@ -292,7 +302,7 @@ export default function SignUp() {
                                 placeholderTextColor="gray"
                             />
                             {errors.formCity && (
-                                <Text style={styles.errorText}>{errors.formCity.message}</Text>
+                                <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formCity.message}</Text>
                             )}
                         </View>
                     )}
@@ -303,10 +313,14 @@ export default function SignUp() {
                     control={control}
                     name="formState"
                     rules={{
-                        required: 'State is required'
+                        required: 'State is required',
+                        minLength: {
+                            value: 2,
+                            message: 'Name must be at least 2 characters'
+                        }
                     }}
                     render={({ field: { onChange, onBlur, value } }) => (
-                        <View style={styles.fieldContainer}>
+                        <View>
                             <TextInput
                                 style={[styles.input, errors.formState && styles.inputError]}
                                 onBlur={onBlur}
@@ -320,7 +334,7 @@ export default function SignUp() {
                                 placeholderTextColor="gray"
                             />
                             {errors.formState && (
-                                <Text style={styles.errorText}>{errors.formState.message}</Text>
+                                <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formState.message}</Text>
                             )}
                         </View>
                     )}
@@ -331,14 +345,14 @@ export default function SignUp() {
                     control={control}
                     name="formZip"
                     rules={{
-                        required: 'ZIP code is required',
+                        required: 'ZIP Code is required',
                         pattern: {
-                            value: /^[0-9]+$/,
-                            message: 'Invalid ZIP code'
+                            value: /^[0-9+\-\s()]+$/,
+                            message: 'Invalid ZIP Code'
                         }
                     }}
                     render={({ field: { onChange, onBlur, value } }) => (
-                        <View style={styles.fieldContainer}>
+                        <View>
                             <TextInput
                                 style={[styles.input, errors.formZip && styles.inputError]}
                                 onBlur={onBlur}
@@ -351,13 +365,13 @@ export default function SignUp() {
                                 minLength={5}
                             />
                             {errors.formZip && (
-                                <Text style={styles.errorText}>{errors.formZip.message}</Text>
+                                <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formZip.message}</Text>
                             )}
                         </View>
                     )}
                 />
-
-
+                {/* Scroll Space lmao */}
+                <View style={{ height: 250 }} />
             </ScrollView>
             <View style={styles.footer}>
             <Button
@@ -383,20 +397,26 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Colors.default.background,
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
     },
     column: {
-        flex: 1,
-        paddingLeft: 15,
-        paddingRight: 15,
-        marginTop: 36,
-        marginBottom: 20,
+        flexGrow: 2,
+        paddingHorizontal: 20,
+        paddingBottom: 200, // Account for footer height
 
     },
     footer: {
-        flex: 1,
-        paddingLeft: 15,
-        paddingRight: 15,
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        borderTopWidth: 1,
+        borderTopColor: Colors.default.border,
+        paddingTop: 19,
+        height: 200,
+        backgroundColor: Colors.default.background,
+        zIndex: 1,
+
     },
     text: {
         marginTop: 21,
@@ -414,10 +434,14 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     input: {
-        backgroundColor: Colors.default.textBox,
+        height: 45,
+        marginTop: 20,
+        marginBottom: -13,
+        borderWidth: 1,
         borderRadius: 5,
+        padding: 10,
+        backgroundColor: Colors.default.textBox,
         fontSize: 16,
-        paddingLeft: 19,
     },
     link: {
         fontFamily: 'InstrumentSans',
@@ -425,20 +449,19 @@ const styles = StyleSheet.create({
         color: Colors.default.link,
         marginTop: 15,
     },
-    fieldContainer: {
-        marginBottom: 9,
-        backgroundColor: Colors.default.textBox,
-        height: 45,
-        borderRadius: 5,
-    },
     inputError: {
         borderColor: '#ff6b6b',
+        borderWidth: 2,
     },
     errorText: {
         color: '#ff6b6b',
+        fontSize: 16,
+        marginLeft: 25,
+        marginTop: -20,
     },
     row: {
         flexDirection: 'row',
         justifyContent: 'center',
+
     },
 });
