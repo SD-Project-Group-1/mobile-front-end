@@ -93,7 +93,13 @@ export default function RootLayout() {
                             headerRight: () => <BackButton />,
                         }}
                     />
-                    {/* Add more screens as needed */}
+                    <Stack.Screen
+                        name="reset"
+                        options={{
+                            title: 'Reset Password',
+                            headerRight: () => <BackButton />,
+                        }}
+                    />
                 </Stack>
                 <View
                     style={{

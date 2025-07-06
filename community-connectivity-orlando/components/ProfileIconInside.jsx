@@ -5,7 +5,7 @@ import { Colors } from "../constants/Colors";
 
 export default function ProfileIconInside({ profilePic, firstName }) {
     // Removes the update photo button when true
-    const [isDisabled, setIsDisabled] = useState(false);
+    const [isDisabled, setIsDisabled] = useState(true);
     // Modal popup for update photo
     const [editPicModal, setEditPicModal] = useState(false);
     // Profile image

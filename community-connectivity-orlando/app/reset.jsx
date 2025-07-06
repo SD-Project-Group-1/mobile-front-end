@@ -1,23 +1,69 @@
 import React, {useState} from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import {Colors} from "../constants/Colors";
 import {useRouter} from "expo-router";
-import Button from '../components/ui/Button'
-
+import Button from '../components/ui/Button';
+import { userAPI } from '../api/user';
 
 export default function ResetPassword(){
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const router = useRouter();
 
-    const handleReset = () => {
-        if(newPassword === confirmPassword){
+    const handleReset = async () => {
+        // Ensures passwords match
+        if (newPassword !== confirmPassword) {
+            console.log('Passwords do not match. Please try again.');
+            Alert.alert('Error', 'Passwords do not match. Please try again.');
+            return;
+        }
 
-        console.log("Your password has been reset successfully!")
-    }
-    else{
-        alert("Your password's do not match ");
-    }
+        // Rule for password length
+        if (newPassword.length < 8) {
+            console.log('Password must be at least 8 characters long.');
+            Alert.alert('Error', 'Password must be at least 8 characters long.');
+            return;
+        }
+
+        try {
+            // Backend endpoint to reset password
+            await userAPI.resetPassword({
+                newPassword: newPassword
+            });
+
+            Alert.alert(
+                'Success', 
+                'Password has been reset successfully!',
+                [
+                    {
+                        text: 'OK',
+                        onPress: () => router.push('/login')
+                    }
+                ]
+            );
+
+        } catch (error) {
+            console.error('Reset password error:', error);
+            
+            // backend reset password is not implemented yet, checks if working
+            if (error.response?.status === 500 && error.response?.data?.includes('Later')) {
+                Alert.alert(
+                    'Coming Soon', 
+                    'Password reset is currently being worked on. Please try again later.',
+                    [
+                        {
+                            text: 'OK',
+                            onPress: () => router.push('/profile')
+                        }
+                    ]
+                );
+            } else {
+                Alert.alert(
+                    'Reset Failed', 
+                    error.response?.data || 'Failed to reset password. Please try again.'
+                );
+            }
+        } 
     };
 
     return(
@@ -29,8 +75,8 @@ export default function ResetPassword(){
                 <Text style = {styles.label}>New Password</Text>
                 <TextInput
                 style = {styles.input}
-                secureText
-                placeholder = "Password"
+                secureTextEntry={true}
+                placeholder = "Password (min 8 characters)"
                 onChangeText = {setNewPassword}
                 value = {newPassword}
                 />
@@ -38,8 +84,8 @@ export default function ResetPassword(){
                 <Text style = {styles.label}> Confirm New Password </Text>
                 <TextInput
                 style = {styles.input}
-                secureText
-                placeholder = "Password"
+                secureTextEntry={true}
+                placeholder = "Confirm Password"
                 onChangeText = {setConfirmPassword}
                 value = {confirmPassword}
                 />
@@ -67,7 +113,7 @@ const styles = StyleSheet.create({
     },
     card: {
         backgroundColor: Colors.default.secondary,
-        borderRadius: 10,
+        borderRadius: 5,
         padding: 18,
         borderWidth: 1,
         borderColor:Colors.default.border,

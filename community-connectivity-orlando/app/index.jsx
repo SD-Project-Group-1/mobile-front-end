@@ -7,9 +7,7 @@ import { authAPI } from '../api/auth.js';
 
 export default function SignUp() {
 
-    {/* For now this is what I'm going with and I gonna need to ask
-     for some clarity during our meeting on how much front-end validation there should be...*/}
-    const {
+   const {
         control,
         handleSubmit,
         formState: {errors},
@@ -37,7 +35,7 @@ export default function SignUp() {
             const formFName = splitName[0] || '';
             const formLName = splitName.slice(1).join(' ') || '';
 
-            // Transform form data to match backend expectations
+            // Organize form data to match backend user table
             const userData = {
                 email: data.formEmail,
                 password: data.formPassword,
@@ -64,6 +62,31 @@ export default function SignUp() {
         }
     };
 
+    const formatDOB = (dob) => {
+        if (!dob) return '';
+        const splitDOB = dob.split('.');
+        if (splitDOB.length === 3) {
+            const month = splitDOB[0].padStart(2, '0');
+            const day = splitDOB[1].padStart(2, '0');
+            const year = splitDOB[2];
+            return `${month}-${day}-${year}`;
+        }
+        return dob;
+    };
+
+    const formatPhoneNum = (number) => {
+        if (!number) return '';
+        const splitPhone = number.split('.');
+        if (splitPhone.length === 3) {
+            const areaCode = splitPhone[0];
+            const middle = splitPhone[1];
+            const last = splitPhone[2];
+            return `${areaCode}-${middle}-${last}`;
+        }
+        return number;
+    };
+    
+
     return (
 
         <View style={styles.container}>
@@ -76,7 +99,7 @@ export default function SignUp() {
                 {/* Name Field */}
                 <Controller
                     control={control}
-                    name="formFName"
+                    name="formName"
                     rules={{
                         required: 'Full name is required',
                         minLength: {
@@ -95,7 +118,7 @@ export default function SignUp() {
                     render={({ field: { onChange, onBlur, value } }) => (
                         <View>
                             <TextInput
-                                style={[styles.input, errors.formFName && styles.inputError]}
+                                style={[styles.input, errors.formName && styles.inputError]}
                                 onBlur={onBlur}
                                 onChangeText={onChange}
                                 value={value}
@@ -173,7 +196,7 @@ export default function SignUp() {
                     control={control}
                     name="formDOB"
                     rules={{
-                        required: 'Date of birth is required'
+                        required: 'Date of birth is required',
                         pattern: {
                             value: /^[0-9+\-\s()]+$/,
                             message: 'Invalid DOB'
@@ -184,11 +207,11 @@ export default function SignUp() {
                             <TextInput
                                 style={[styles.input, errors.formDOB && styles.inputError]}
                                 onBlur={onBlur}
-                                onChangeText={onChange}
+                                onChangeText={(dob) => onChange(formatDOB(dob))}
                                 value={value}
-                                placeholder="mm/dd/yyyy"
+                                placeholder="mm-dd-yyyy"
                                 keyboardType="numeric"
-                                minLength={8}
+                                minLength={10}
                                 maxLength={10}
                                 placeholderTextColor="gray"
                             />
@@ -217,13 +240,13 @@ export default function SignUp() {
                             <TextInput
                                 style={[styles.input, errors.formPhoneNum && styles.inputError]}
                                 onBlur={onBlur}
-                                onChangeText={onChange}
+                                onChangeText={(number) => onChange(formatPhoneNum(number))}
                                 value={value}
                                 placeholder="Phone Number"
                                 keyboardType="numeric"
                                 placeholderTextColor="gray"
-                                maxLength={12}
-                                minLength={10}
+                                maxLength={14}
+                                minLength={14}
                             />
                             {errors.formPhoneNum && (
                                 <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formPhoneNum.message}</Text>

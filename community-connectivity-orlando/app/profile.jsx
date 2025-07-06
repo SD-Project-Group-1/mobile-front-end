@@ -5,54 +5,24 @@ import ProfileInfo from '../components/ProfileInfo';
 import { Colors } from "../constants/Colors";
 
 export default function Profile() {
-    const [id, setId] = useState('00001');
-    const [firstName, setFirstName] = useState('Jane');
-    const [lastName, setLastName] = useState('Shmane');
-    const [phoneNumber, setPhoneNumber] = useState('(407) 356-1234');
-    const [birthdate, setBirthdate] = useState('01/01/1985');
-    const [address, setAddress] = useState('444 Epic Universe, Orlando Fl, 32819');
-    const [email, setEmail] = useState('J.Shmane@this.com');
-    const [verify, setVerify] = useState(false); // Updated to verify user age
     const [profilePic, setProfilePic] = useState(null);
+    const [refresh, setRefresh] = useState(0);
 
     // Handle profile edit updates
     const updateProfile = (updatedUser) => {
-        // Update user information
-        setFirstName(updatedUser.firstName);
-        setLastName(updatedUser.lastName);
-        setPhoneNumber(updatedUser.phoneNumber);
-        setBirthdate(updatedUser.birthdate);
-        setAddress(updatedUser.address);
-        setEmail(updatedUser.email);
         setProfilePic(updatedUser.profilePic);
-    };
-
-    // Handle profile picture updates
-    const updateProfilePic = (picture) => {
-        setProfilePic(picture);
+        
+        // UserInfoPanel refreshes user data after profile update
+        setRefresh(prev => prev + 1);
     };
 
     return (
         <View style={styles.container}>
-            <UserInfoPanel
-                id={id}
-                firstName={firstName}
-                lastName={lastName}
-                phoneNumber={phoneNumber}
-                email={email}
-                address={address}
-                verify={verify}
-                profilePic={updateProfilePic}
+            <UserInfoPanel 
+                profilePic={picture => setProfilePic(picture)}
+                key={refresh} // Updates user data after profile update
             />
-            <ProfileInfo
-                firstName={firstName}
-                lastName={lastName}
-                phoneNumber={phoneNumber}
-                birthdate={birthdate}
-                address={address}
-                email={email}
-                onSave={updateProfile}
-            />
+            <ProfileInfo onSave={updateProfile} />
         </View>
     );
 }
