@@ -16,8 +16,8 @@ export const authAPI = {
         return res.data;
     },
 
-    // Logout user
-    async logout() {
+    // Sign out user
+    async signout() {
         await api.post('/signout');
         await SecureStore.deleteItemAsync('token');
     },
