@@ -28,8 +28,17 @@ export default {
         web: {
             favicon: "./assets/images/favicon.png"
         },
+        updates: {
+            url: process.env.UPDATES_URL,
+        },
+        runtimeVersion: {
+            policy: "appVersion"
+        },
         extra: {
-            URL: process.env.API_URL
+            URL: process.env.API_URL,
+            eas: {
+                projectId: process.env.EXPO_PROJECT_ID,
+            }
         }
     }
 };

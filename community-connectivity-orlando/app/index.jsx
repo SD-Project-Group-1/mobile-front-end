@@ -209,7 +209,7 @@ export default function SignUp() {
                                 onBlur={onBlur}
                                 onChangeText={(dob) => onChange(formatDOB(dob))}
                                 value={value}
-                                placeholder="mm-dd-yyyy"
+                                placeholder="mm-dd-yyyy (use 01.01.1990)"
                                 keyboardType="numeric"
                                 minLength={10}
                                 maxLength={10}
@@ -242,7 +242,7 @@ export default function SignUp() {
                                 onBlur={onBlur}
                                 onChangeText={(number) => onChange(formatPhoneNum(number))}
                                 value={value}
-                                placeholder="Phone Number"
+                                placeholder="Phone Number (use 123.456.7890)"
                                 keyboardType="numeric"
                                 placeholderTextColor="gray"
                                 maxLength={14}
