@@ -63,8 +63,8 @@ export const borrowAPI = {
     // Get a specific borrow record for a user by userId
     async getBorrowsUserId(userId) {
         try {
-            const res = await api.get(`/borrow/user/${userId}`);
-            return res.data;
+            return await api.get(`/borrow/user/${userId}`);
+
         } catch (error) {
             console.error('getBorrowsUserId error:', error?.message || 'Failed to get borrow records for a specific user.');
             throw error;

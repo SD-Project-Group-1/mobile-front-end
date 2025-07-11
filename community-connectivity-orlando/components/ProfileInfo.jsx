@@ -8,8 +8,9 @@ import { userAPI } from '../api/user';
 import { authAPI } from '../api/auth';
 import * as SecureStore from 'expo-secure-store';
 
-export default function ProfileInfo({ onSave }) {
-
+export default function ProfileInfo(props) {
+    const { user, orders, onSave, loading } = props;
+    
     // User profile data
     const [userData, setUserData] = useState({
         firstName: '',
@@ -21,10 +22,8 @@ export default function ProfileInfo({ onSave }) {
         id: ''
     });
 
-    // If true, all fields are editable regardless of reservation, restriction is lifted
-    const [isDisabled] = useState(true);
     // User reservation verification state 
-    const [hasActiveReservation] = useState(false); // Set to true to test edit and error modal
+    const [hasActiveReservation, setHasActiveReservation] = useState(false);
 
     // Edit profile state
     const [editProfile, setEditProfile] = useState(false);
@@ -35,26 +34,17 @@ export default function ProfileInfo({ onSave }) {
     const [deleteAccountModal, setDeleteAccountModal] = useState(false);
     const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
 
-    // Retrieves user profile data
+    // Retrieves user profile data and updates user data
     useEffect(() => {
-        userProfile();
-    }, []);
-
-    // Retrieves user profile from backend
-    const userProfile = async () => {
-        try {
-            // Get current user profile
-            const currentUser = await userAPI.getCurrentUser();
-
-            // Formats user profile data
+        if (user) {
             const profileData = {
-                firstName: currentUser.user.first_name || '',
-                lastName: currentUser.user.last_name || '',
-                phoneNumber: currentUser.user.phone || '',
-                birthdate: currentUser.user.dob ? new Date(currentUser.user.dob).toLocaleDateString() : '',
-                address: addressField(currentUser.user),
-                email: currentUser.user.email || '',
-                id: currentUser.user.id || ''
+                firstName: user.first_name || '',
+                lastName: user.last_name || '',
+                phoneNumber: user.phone || '',
+                birthdate: user.dob ? new Date(user.dob).toLocaleDateString() : '',
+                address: addressField(user),
+                email: user.email || '',
+                id: user.id || ''
             };
             
             // For debugging
@@ -62,11 +52,18 @@ export default function ProfileInfo({ onSave }) {
             
             setUserData(profileData);
             setEditField(profileData);
-            
-        } catch (err) {
-            console.error('Error getting user profile information:', err);
         }
-    };
+    }, [user]);
+
+    // Check for active reservations
+    useEffect(() => {
+        // If there is an active reservation or device rental, set hasActiveReservation to true
+        if (orders && orders.length > 0) {
+            setHasActiveReservation(true);
+        } else {
+            setHasActiveReservation(false);
+        }
+    }, [orders]);
 
     // Address in one field
     const addressField = (user) => {
@@ -80,6 +77,7 @@ export default function ProfileInfo({ onSave }) {
         return fields.join(', ');
     };
 
+
     // Handle edit profile button press
     const handleEditProfile = () => {
         setEditProfile(true);
@@ -87,18 +85,16 @@ export default function ProfileInfo({ onSave }) {
     };
 
     // Determine if a field is editable
-    const isFieldEditable = (field) => {
+    const isFieldEditable = () => {
         if (!editProfile) {
             return false;
         }
-        // If isDisabled is true, all fields are editable regardless of reservation
-        if (isDisabled) {
-            return true;
-        }
+
         if (hasActiveReservation) {
-            return field === 'phoneNumber' || field === 'email';
+            return false;
         }
-        return field !== 'birthdate';
+        // all fields are editable if no active reservation or device rental
+        return true; 
     };
 
     // Handle field value changes
@@ -110,16 +106,8 @@ export default function ProfileInfo({ onSave }) {
     };
     
     // Show error modal for non-editable fields
-    const editFieldModal = (field) => {
-        // If isDisabled is true, don't show error modals for any field
-        if (isDisabled) {
-            return true;
-        }
-        if (hasActiveReservation && field !== 'phoneNumber' && field !== 'email') {
-            setEditErrorModal(true);
-            return false;
-        }
-        if (!hasActiveReservation && field === 'birthdate') {
+    const editFieldModal = () => {
+        if (hasActiveReservation) {
             setEditErrorModal(true);
             return false;
         }
@@ -175,10 +163,11 @@ export default function ProfileInfo({ onSave }) {
                 setConfirmDeleteModal(false);
                 setEditErrorModal(true);
             } else {
-                Alert.alert(
-                    'Delete Failed',
-                    'Failed to delete account. Please try again.'
-                );
+                setConfirmDeleteModal(true);
+                //Alert.alert(
+                //    'Delete Failed',
+                //    'Failed to delete account. Please try again.'
+                //);
             }
         }
     };
@@ -229,6 +218,15 @@ export default function ProfileInfo({ onSave }) {
             );
         }
     };
+
+    if (loading) {
+        return (
+            <View style={styles.container}>
+                <Text>Loading...</Text>
+            </View>
+        );
+    };
+
     return (
         <KeyboardAvoidingView
             // To prevent keyboard from covering input fields when editing profile

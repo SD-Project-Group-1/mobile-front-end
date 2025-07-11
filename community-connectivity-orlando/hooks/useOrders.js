@@ -17,7 +17,7 @@ export const useOrders = (userId) => {
             setLoading(true);
             setError(null);
             console.log("Fetching borrowed history for user:", userId);
-            const response = await borrowAPI.getBorrowedHistory(userId);
+            const response = await borrowAPI.getBorrowsUserId(userId);
 
             setOrders(response.data);
             console.log(`Found ${response.data.length} records for user ${userId}`);
