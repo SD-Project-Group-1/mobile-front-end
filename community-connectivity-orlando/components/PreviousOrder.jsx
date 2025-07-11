@@ -1,39 +1,60 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import {Colors} from "../constants/Colors";
+import {useOrders} from "../hooks/useOrders";
 
-export default function PreviousOrder({ pastOrders }) {
-    if (pastOrders) {
+export default function PreviousOrder({ user }) {
+
+    const { orders } = useOrders(user?.id);
+
+    const previousOrders = orders.find(order =>
+        ["Cancelled", "Checked in", "Late"].includes(order.borrow_status)
+    );
+
+    if (previousOrders) {
         return (
             <View style={styles.container}>
-                {/* Currently this is static but, adding variables should be easy... */}
-                <View style={styles.header}>
-                    <View style={styles.headerLeft}>
-                        <Text style={styles.headerLabel}>ORDER PLACED:</Text>
-                        <Text style={styles.headerValue}>05/08/2025</Text>
+                {previousOrders?.map((order) => (
+                    <View key={order.borrow_id} style={styles.container}>
+                        <View style={styles.header}>
+                            <View style={styles.headerLeft}>
+                                <Text style={styles.headerLabel}>ORDER PLACED:</Text>
+                                <Text style={styles.headerValue}>{order.borrow_date.slice(0, 10)}</Text>
+                            </View>
+                            <View style={styles.headerRight}>
+                                <Text style={styles.headerLabel}>ORDER #:</Text>
+                                <Text style={styles.headerValue}>{order.borrow_id}</Text>
+                            </View>
+                        </View>
+
+                        <View style={styles.OrderStatus}>
+                            <Text style={styles.statusText}>
+                                Returned {new Date(order.returned_date).toLocaleString('default', {
+                                month: 'long',
+                                day: '2-digit',
+                                year: 'numeric'
+                            })}
+                            </Text>
+                            {/* I know how to fix this but, I'll implement it with request backend integration */}
+                            <Text style={styles.deviceInfo}>Device Name: Dell latitude 3550</Text>
+                            <Text style={styles.deviceInfo}>Device ID: {order.device_id}</Text>
+                        </View>
+
+                        <View style={styles.OrderInformation}>
+                            <View style={styles.leftSection}>
+                                <Text style={styles.reasonLabel}>Reason: {order.reason_for_borrow}</Text>
+                                <Text style={styles.returnedToLabel}>Returned to:</Text>
+                                <Text style={styles.address}>{order.device_location}</Text>
+                            </View>
+                            <View style={styles.rightSection}>
+                                <Text style={styles.lateLabel}>Late?:</Text>
+                                <Text style={styles.lateValue}>
+                                    {order.borrow_status === "Late" ? "Yes" : "No"}
+                                </Text>
+                            </View>
+                        </View>
                     </View>
-                    <View style={styles.headerRight}>
-                        <Text style={styles.headerLabel}>ORDER #:</Text>
-                        <Text style={styles.headerValue}>123456789</Text>
-                    </View>
-                </View>
-                <View style={styles.OrderStatus}>
-                    <Text style={styles.statusText}>Returned May 7, 2025</Text>
-                    <Text style={styles.deviceInfo}>Device Name: Dell latitude 3550</Text>
-                    <Text style={styles.deviceInfo}>Device ID: 1234567890</Text>
-                </View>
-                <View style={styles.OrderInformation}>
-                    <View style={styles.leftSection}>
-                        <Text style={styles.reasonLabel}>Reason: School</Text>
-                        <Text style={styles.returnedToLabel}>Returned to:</Text>
-                        <Text style={styles.address}>10002 University Blvd</Text>
-                        <Text style={styles.address}>Orlando, FL 32817</Text>
-                    </View>
-                    <View style={styles.rightSection}>
-                        <Text style={styles.lateLabel}>Late?:</Text>
-                        <Text style={styles.lateValue}>No</Text>
-                    </View>
-                </View>
+                ))}
             </View>
         );
     }

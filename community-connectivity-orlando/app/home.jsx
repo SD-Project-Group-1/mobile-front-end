@@ -5,12 +5,22 @@ import PreviousOrder from '../components/PreviousOrder';
 import Button from '../components/ui/Button';
 import {Colors} from "../constants/Colors";
 import { router } from 'expo-router';
+import { useUser } from '../hooks/useUser';
 import {useState} from "react";
 
 
 export default function Home() {
-    const [pastOrders, setPastOrders] = useState(true);
+    const { user, loading } = useUser('/+not-found');
+    const [hasActiveOrder, setHasActiveOrder] = useState(false);
 
+
+    if (loading) {
+        return (
+            <View style={styles.container}>
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>
@@ -22,30 +32,27 @@ export default function Home() {
                 <Text style={styles.title}>
                     Order Status
                 </Text>
-                {/* This needs to take in values because currently it's static but not a huge problem */}
-                <OrderStatus/>
+                <OrderStatus
+                    user={user}
+                    onActiveOrderFound={setHasActiveOrder}
+                />
                 <Text style={styles.title}>
                     Previous Orders
                 </Text>
-                {/* Same Deal as OrderStatus */}
-                <PreviousOrder
-                    pastOrders={pastOrders}
-                />
+                <PreviousOrder user={user} />
             </ScrollView>
 
-            <View style={styles.shadowContainer}>
-                <Button
-                    title="Request a Device"
-                    width={150}
-                    height={50}
-                    onPress={() => {
-                        router.push('/request');
-                    }}
-                    textStyle={{
-                        fontSize: 14,
-                    }}
-                />
-            </View>
+            {!hasActiveOrder && (
+                <View style={styles.shadowContainer}>
+                    <Button
+                        title="Request a Device"
+                        width={150}
+                        height={50}
+                        onPress={() => router.push('/request')}
+                        textStyle={{ fontSize: 14 }}
+                    />
+                </View>
+            )}
         </View>
     );
 }

@@ -1,13 +1,14 @@
 import { Text, View, StyleSheet } from 'react-native';
 import {Colors} from "../constants/Colors";
 import Button from '../components/ui/Button';
+import { router } from 'expo-router';
 
 export default function NotFoundScreen() {
     return (
         <View style={styles.container}>
             <Text style={styles.text}>Page not found</Text>
             <Button
-                title="Go home"
+                title="Return to Sign Up Screen."
                 onPress={() => router.push('/')}
             />
         </View>

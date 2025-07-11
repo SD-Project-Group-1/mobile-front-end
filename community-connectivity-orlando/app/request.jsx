@@ -1,21 +1,31 @@
-import {ScrollView, StyleSheet, View} from 'react-native';
-//import Dropdown from '../components/ui/Dropdown';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import Button from '../components/ui/Button';
 import {Colors} from "../constants/Colors";
 import {router} from "expo-router";
 import PickupDetails from '../components/PickupDetails';
 import YourInfo from '../components/YourInfo';
+import {userAPI} from "../api/user";
+import {useEffect, useState} from "react";
+import {useUser} from "../hooks/useUser";
 
 
 export default function Request() {
+    const { user, loading } = useUser('/+not-found');
+
+    if (loading) {
+        return (
+            <View style={styles.container}>
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
+
     return (
         <View style={styles.container}>
             <PickupDetails/>
 
-            <ScrollView
-                style={styles.scrollView}
-            >
-                <YourInfo/>
+            <ScrollView style={styles.scrollView}>
+                <YourInfo user={user} />
             </ScrollView>
 
             <View style={styles.footer}>
@@ -25,7 +35,7 @@ export default function Request() {
                         height={80}
                         onPress={() => {
                             router.push('/home');
-                        }}                    />
+                        }}/>
                 </View>
             </View>
         </View>

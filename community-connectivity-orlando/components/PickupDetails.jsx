@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import {Colors} from "../constants/Colors";
 
-export default function PickupDetails() {
+export default function PickupDetails({ user }) {
     return (
         <View style={styles.container}>
             <View style={styles.pickupDetails}>

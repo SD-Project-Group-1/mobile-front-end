@@ -1,13 +1,24 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import {Colors} from "../constants/Colors";
 import Button from '../components/ui/Button';
 import Modal from "./ui/Modal";
+import {useOrders} from "../hooks/useOrders";
 
-export default function OrderStatus() {
+export default function OrderStatus({ user, onActiveOrderFound }) {
+    const { orders, refreshOrders } = useOrders(user?.id);
 
-    const [hasActiveCheckout] = useState(false);
-    const [hasOngoingOrder, setHasOngoingOrder] = useState(true);
+    const activeOrder = orders.find(order =>
+        ["Submitted", "Scheduled", "Checked out"].includes(order.borrow_status)
+    );
+
+    useEffect(() => {
+        if (activeOrder) {
+            onActiveOrderFound(true);
+        } else {
+            onActiveOrderFound(false);
+        }
+    }, [orders]);
 
 
     const [cancelOrderModal, setCancelOrderModal] = useState(false);
@@ -23,30 +34,42 @@ export default function OrderStatus() {
 
     const closeModal = () => {
         setConfirmCancelModal(false);
-        if (!hasActiveCheckout) {
-            setHasOngoingOrder(false);
+        {/* I need backend to implement a route for allowing users to cancel their own orders because I can't do that from here */}
+
+        if (activeOrder?.borrow_status !== "Checked out") {
+            setActiveOrder(prev => ({
+                ...prev,
+                borrow_status: "Cancelled"
+            }));
+            refreshOrders();
+            onActiveOrderFound(false);
+
         }
     };
 
-    if (hasOngoingOrder) {
+
+
+    if (activeOrder) {
         return (
             <View style={styles.container}>
-                {/* Again this is static but, adding variables should be easy, I've already added some... */}
                 <View style={styles.header}>
                     <View style={styles.headerLeft}>
                         <Text style={styles.headerLabel}>ORDER PLACED:</Text>
-                        <Text style={styles.headerValue}>05/08/2025</Text>
+                        <Text style={styles.headerValue}>{activeOrder.borrow_date.slice(0, 10)}</Text>
                     </View>
                     <View style={styles.headerRight}>
                         <Text style={styles.headerLabel}>ORDER #:</Text>
-                        <Text style={styles.headerValue}>123456789</Text>
+                        <Text style={styles.headerValue}>{activeOrder.borrow_id}</Text>
                     </View>
                 </View>
                 <View style={styles.OrderStatus}>
-                    <Text style={styles.returnText}>Return by May 17</Text>
-                    <Text style={styles.statusInfo}>Status: Checked out by you on</Text>
-                    <Text style={styles.orderInfo}>May 10, 2025 2:30 PM.</Text>
-                    <Text style={styles.deviceInfo}>Device ID: 1234567890</Text>
+                    <Text style={styles.returnText}>Return by {new Date(activeOrder.return_date).toLocaleString('default', {
+                        month: 'long',
+                        day: '2-digit',
+                        year: 'numeric'
+                    })}</Text>
+                    <Text style={styles.statusInfo}>Status: {activeOrder.borrow_status}</Text>
+                    <Text style={styles.deviceInfo}>Device ID: {activeOrder.device_id}</Text>
                 </View>
                 <View style={styles.buttonRow}>
                     <Button
@@ -96,8 +119,11 @@ export default function OrderStatus() {
                     <Modal
                         visible={confirmCancelModal}
                         size="regular"
-                        title={hasActiveCheckout ? "Error: Your order cannot be cancelled!" : "Success"}
-                        message={hasActiveCheckout ? "You are currently in possession of a borrowed device."
+                        title={activeOrder?.borrow_status === "Checked out"
+                            ? "Error: Your order cannot be cancelled!"
+                            : "Success"}
+                        message={activeOrder?.borrow_status === "Checked out"
+                            ? "You are currently in possession of a borrowed device."
                             : "Your order has been cancelled."}
                         onClose={closeModal}
                         setTime={3000}
@@ -109,19 +135,26 @@ export default function OrderStatus() {
                         size="regular"
                         title={"Info: If you are encountering device issues\n" +
                             "contact the number below:"}
+                        //Massive issue here every location probably has a phone number but, we don't have that...
                         message={"(407) 574-7177 \n" +
                             "Availability only on Weekdays from 11:30 AM-10:30 PM"}
                         onClose={() => setDeviceSupportModal(false)}
                         setTime={5000}
                     />
 
-                    {/* Regular Modal for return device */}
+                    {/* Regular Modal for return device
+                     I'll get this done with request integration...
+                     */}
                     <Modal
                         visible={returnDeviceModal}
                         size="regular"
-                        title={"Info: Return the device to the following address:"}
-                        message={"10002 University Blvd, Orlando, FL 32817\n" +
-                            "Open only on Weekdays from 11:30 AM-10:30 PM"}
+                        title={activeOrder?.borrow_status === "Checked out"
+                            ? "Info: Return the device to the following address:"
+                            : "Error: You don't have a device to return."}
+                        message={activeOrder?.borrow_status === "Checked out"
+                        ?"10002 University Blvd, Orlando, FL 32817\n"
+                            : "Your order suggests that your are not in possession of a device."
+                    }
                         onClose={() => setReturnDeviceModal(false)}
                         setTime={5000}
                     />
@@ -230,11 +263,6 @@ const styles = StyleSheet.create({
     statusInfo: {
         fontSize: 14,
         color: Colors.default.textWhite,
-    },
-    orderInfo: {
-        fontSize: 14,
-        color: Colors.default.titlesSelected,
-        marginBottom: 4,
     },
     deviceInfo: {
         fontSize: 14,

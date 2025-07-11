@@ -25,5 +25,5 @@ export const authAPI = {
     // Get token
     async getToken() {
         return await SecureStore.getItemAsync('token');
-    }
+    },
 };

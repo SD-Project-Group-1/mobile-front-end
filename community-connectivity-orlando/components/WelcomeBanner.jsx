@@ -3,7 +3,6 @@ import {View, Text, StyleSheet, Animated, TouchableOpacity, Image} from 'react-n
 import {Colors} from "../constants/Colors";
 
 
-{/* This is a bit different from the prototype banner but, I think I prefer this more, the original looks weirdly out of place */}
 export default function WelcomeBanner() {
     const [isMinimized, setIsMinimized] = useState(false);
     const [isHovered, setIsHovered] = useState(false);

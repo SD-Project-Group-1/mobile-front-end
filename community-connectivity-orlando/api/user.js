@@ -29,5 +29,8 @@ export const userAPI = {
     async resetPassword(passwordData) {
         const res = await api.post('/user/reset', passwordData);
         return res.data;
-    }
+    },
+
+
+
 };

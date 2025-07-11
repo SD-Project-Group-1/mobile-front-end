@@ -1,16 +1,52 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, TextInput} from 'react-native';
 import {Colors} from "../constants/Colors";
 import Dropdown from '../components/ui/Dropdown';
+import { userAPI } from '../api/user';
 
 
-export default function YourInfo() {
+export default function YourInfo({ user }) {
+
+    const [userData, setUserData] = useState({
+        firstName: '',
+        lastName: '',
+        phoneNumber: '',
+        id: ''
+    });
+
 
     const devices = ['Mobile Hotspot', 'Laptop', 'Tablet'];
     const reasons = ['Job Search', 'School', 'Training', 'Other'];
     const [selectedReason, setSelectedReason] = useState('');
     const [selectedDevice, setSelectedDevice] = useState('');
 
+
+    useEffect(() => {
+        userProfile();
+    }, []);
+
+
+    const userProfile = async () => {
+        try {
+            // Get current user profile
+            const currentUser = await userAPI.getCurrentUser();
+
+            // Formats user profile data
+            const profileData = {
+                firstName: currentUser.user.first_name || '',
+                lastName: currentUser.user.last_name || '',
+                phoneNumber: currentUser.user.phone || '',
+                id: currentUser.user.id || ''
+            };
+
+            // For debugging
+            //console.log('Profile data with ID:', profileData.id);
+
+            setUserData(profileData);
+        } catch (err) {
+            console.error('Error getting user profile information:', err);
+        }
+    };
 
     return (
         <View style={styles.container}>
