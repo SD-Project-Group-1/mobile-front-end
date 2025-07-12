@@ -16,18 +16,14 @@ export const useOrders = (userId) => {
         try {
             setLoading(true);
             setError(null);
-            console.log("Fetching borrowed history for user:", userId);
+            //console.log("Fetching borrowed history for user:", userId);
             const response = await borrowAPI.getBorrowsUserId(userId);
 
             setOrders(response.data);
-            console.log(`Found ${response.data.length} records for user ${userId}`);
-
-
-            response.data.forEach(order => {
-                console.log(`Order placed: ${order.borrow_date}, Return date: ${order.return_date}`);
-            });
+            //console.log(`Found ${response.data.length} records for user ${userId}`);
 
         } catch (err) {
+            console.error('Failed to load orders:', userId);
             console.error('Failed to load orders:', err);
             setError(err);
         } finally {

@@ -10,6 +10,7 @@ import {useState} from "react";
 
 
 export default function Home() {
+    //const { user, loading } = useUserContext();
     const { user, loading } = useUser('/+not-found');
     const [hasActiveOrder, setHasActiveOrder] = useState(false);
 

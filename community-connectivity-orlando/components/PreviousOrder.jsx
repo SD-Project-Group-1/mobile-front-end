@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import {Colors} from "../constants/Colors";
 import {useOrders} from "../hooks/useOrders";
@@ -7,15 +7,17 @@ export default function PreviousOrder({ user }) {
 
     const { orders } = useOrders(user?.id);
 
-    const previousOrders = orders.find(order =>
+    const previousOrders = orders.filter(order =>
         ["Cancelled", "Checked in", "Late"].includes(order.borrow_status)
     );
 
+    console.log(previousOrders.length)
+
     if (previousOrders) {
         return (
-            <View style={styles.container}>
+            <View>
                 {previousOrders?.map((order) => (
-                    <View key={order.borrow_id} style={styles.container}>
+                    <View key={order.borrow_id} style={styles.orderCard}>
                         <View style={styles.header}>
                             <View style={styles.headerLeft}>
                                 <Text style={styles.headerLabel}>ORDER PLACED:</Text>
@@ -29,7 +31,7 @@ export default function PreviousOrder({ user }) {
 
                         <View style={styles.OrderStatus}>
                             <Text style={styles.statusText}>
-                                Returned {new Date(order.returned_date).toLocaleString('default', {
+                                Returned {new Date(order.return_date).toLocaleString('default', {
                                 month: 'long',
                                 day: '2-digit',
                                 year: 'numeric'
@@ -71,14 +73,14 @@ export default function PreviousOrder({ user }) {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        height: 311,
+    orderCard: {
         backgroundColor: Colors.default.secondary,
         borderRadius: 5,
         marginBottom: 9,
         borderColor: Colors.default.border,
         borderWidth: 1,
         marginHorizontal: 15,
+        minHeight: 311,
     },
     header: {
         flexDirection: 'row',

@@ -1,19 +1,53 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import {Colors} from "../constants/Colors";
+import {zipcodeAPI} from "../api/zipcode";
+
 
 export default function PickupDetails({ user }) {
+    const [inRange, setInRange] = useState(null);
+    const [nearestCenter, setNearestCenter] = useState('');
+
+
+    useEffect(() => {
+        const checkRange = async () => {
+
+            try {
+                const location = await zipcodeAPI.checkZipcode(user.zip_code);
+                    setInRange(location.withinRange);
+                    if (location.nearestCenter) setNearestCenter(location.nearestCenter);
+                } catch (err) {
+                    console.error('Zipcode check failed:', err);
+                    setInRange(false);
+                }
+        };
+
+        checkRange();
+    }, [user?.zip_code]);
+
     return (
         <View style={styles.container}>
             <View style={styles.pickupDetails}>
                 <Text style={styles.title}>Pickup details:</Text>
-                <Text style={styles.carryoutLocation}>10002 University Blvd, Orlando, FL 32817</Text>
-                <Text style={styles.carryoutDetails}>Carryout at
-                    <Text style={styles.carryoutDate}> May 10, 2025  2:30 PM</Text>
-                </Text>
+                {inRange === false && (
+                    <Text style={styles.carryoutLocation}>
+                        You're currently outside the allowed pickup range. You will not be able to place an order at this time.
+                    </Text>
+                )}
+
+                {inRange === true && (
+                    <Text style={styles.carryoutLocation}>
+                        Carry out at: {nearestCenter}
+                    </Text>
+                )}
+
+                {inRange === null && (
+                    <Text style={styles.carryoutLocation}>
+                        Checking location range...
+                    </Text>
+                )}
 
             </View>
-
         </View>
     );
 }
@@ -38,11 +72,4 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginBottom: 10,
     },
-    carryoutDetails: {
-        color: Colors.default.textWhite,
-        fontSize: 14,
-    },
-    carryoutDate: {
-        color: Colors.default.titlesSelected,
-    }
 });
