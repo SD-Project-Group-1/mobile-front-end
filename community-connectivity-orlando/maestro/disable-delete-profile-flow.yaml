@@ -1,0 +1,51 @@
+appId: host.exp.Exponent
+
+# Test: Verify user can not delete account if they have an active reservation or borrowed device
+---
+- launchApp
+
+# Navigate to app in Expo Go
+- assertVisible: "community-connectivity-orlando"
+- tapOn: "community-connectivity-orlando"
+
+# Step 1: Login to the App
+# Sign Up Screen -> Login Screen
+- assertVisible: "Already have an account?"
+- tapOn: "  Login"
+- assertVisible: "Login to"
+- assertVisible: "Your Account"
+- tapOn: "user@example.com"
+- inputText: "two@mail.com"
+- tapOn: "Password"
+- inputText: "111111111"
+- tapOn:
+    point: "50%,51%" # Location of Login button
+- tapOn: "OK"
+
+# Step 2: Check if user has an active reservation or borrowed device
+# Home Screen
+- assertVisible: "Order Status"
+
+# Step 3: Navigate to the profile page
+- assertVisible: "Home"
+- tapOn:
+    point: "91%,9%" # Location of Profile button
+
+# Step 4: Click the "Delete Account" button (space intentional)
+- assertVisible: "   Delete Account"
+- tapOn:
+    point: "79%,88%" # Location of Delete Account button
+- assertVisible: "Are you sure you want to delete your account? This action cannot be undone. Cancel Confirm Delete"
+
+# Expected Results: 
+# User sees an error message pop-up. User account is not deleted
+- tapOn:
+    point: "72%,55%" # Location of Confirm Delete button
+- extendedWaitUntil:
+    notVisible: 
+        text: 'Oops: Account not deleted! You still have an active device rental or reservation.'
+    timeout: 3000
+
+# Verify user is back to the profile view
+- assertVisible: "Profile Information"
+- assertVisible: "Account Actions"

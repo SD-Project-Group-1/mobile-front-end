@@ -1,48 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import ProfileIconInside from './ProfileIconInside';
 import { Colors } from "../constants/Colors";
-import { userAPI } from '../api/user';
 
-export default function UserInfoPanel({ profilePic }) {
+export default function UserInfoPanel({ user, profilePic, loading }) {
 
-    // User profile data
-    const [userData, setUserData] = useState({
-        firstName: '',
-        lastName: '',
-        phoneNumber: '',
-        birthdate: '',
-        address: '',
-        email: ''
-    });
-
-     // Retrieves user profile data
-     useEffect(() => {
-        userProfile();
-    }, []);
-
-    // Retrieves user profile from API
-    const userProfile = async () => {
-        try {
-            // Get current user profile
-            const userProfileID = await userAPI.getCurrentUser();
-            
-            // Formats the data
-            const profileData = {
-                firstName: userProfileID.user.first_name || '',
-                lastName: userProfileID.user.last_name || '',
-                userID: userProfileID.user.id || '',
-                address: addressField(userProfileID.user),
-                phoneNumber: userProfileID.user.phone || '',
-                email: userProfileID.user.email || ''
-            };
-            
-            setUserData(profileData);
-            
-        } catch (error) {
-            console.error('Error getting user profile information:', error);
-        }
-    };
+    // Show loading state if user data is still loading
+    if (loading) {
+        return (
+            <View style={styles.container}>
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
 
     // Appends address in one field
     const addressField = (user) => {
@@ -55,18 +25,28 @@ export default function UserInfoPanel({ profilePic }) {
         return fields.join(', ');
     };
 
+    // User profile data format
+    const profileData = {
+        firstName: user.first_name || '',
+        lastName: user.last_name || '',
+        userID: user.id || '',
+        address: addressField(user),
+        phoneNumber: user.phone || '',
+        email: user.email || ''
+    };
+
     return (
         // User info panel
         <View style={styles.container}>
             <ProfileIconInside 
                 profilePic={profilePic} 
-                firstName={userData.firstName} 
+                firstName={profileData.firstName} 
             />
-            <Text style={styles.title}>{userData.firstName} {userData.lastName}</Text>
-            <Text style={styles.text}>User ID: {userData.userID}</Text>
-            <Text style={styles.text}>{userData.address}</Text>
-            <Text style={styles.text}>{userData.phoneNumber}</Text>
-            <Text style={styles.text}>{userData.email}</Text>
+            <Text style={styles.title}>{profileData.firstName} {profileData.lastName}</Text>
+            <Text style={styles.text}>User ID: {profileData.userID}</Text>
+            <Text style={styles.text}>{profileData.address}</Text>
+            <Text style={styles.text}>{profileData.phoneNumber}</Text>
+            <Text style={styles.text}>{profileData.email}</Text>
         </View>
     );
 }
