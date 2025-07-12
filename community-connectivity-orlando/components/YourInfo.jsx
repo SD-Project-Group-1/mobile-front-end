@@ -1,52 +1,16 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet, TextInput} from 'react-native';
 import {Colors} from "../constants/Colors";
 import Dropdown from '../components/ui/Dropdown';
-import { userAPI } from '../api/user';
 
-
-export default function YourInfo({ user }) {
-
-    const [userData, setUserData] = useState({
-        firstName: '',
-        lastName: '',
-        phoneNumber: '',
-        id: ''
-    });
-
-
+export default function YourInfo({ user, selectedReason, setSelectedReason }) {
     const devices = ['Mobile Hotspot', 'Laptop', 'Tablet'];
     const reasons = ['Job Search', 'School', 'Training', 'Other'];
-    const [selectedReason, setSelectedReason] = useState('');
+
+
+    //Backend needs to take care of this too before I can do anything...
     const [selectedDevice, setSelectedDevice] = useState('');
 
-
-    useEffect(() => {
-        userProfile();
-    }, []);
-
-
-    const userProfile = async () => {
-        try {
-            // Get current user profile
-            const currentUser = await userAPI.getCurrentUser();
-
-            // Formats user profile data
-            const profileData = {
-                firstName: currentUser.user.first_name || '',
-                lastName: currentUser.user.last_name || '',
-                phoneNumber: currentUser.user.phone || '',
-                id: currentUser.user.id || ''
-            };
-
-            // For debugging
-            //console.log('Profile data with ID:', profileData.id);
-
-            setUserData(profileData);
-        } catch (err) {
-            console.error('Error getting user profile information:', err);
-        }
-    };
 
     return (
         <View style={styles.container}>
@@ -54,13 +18,13 @@ export default function YourInfo({ user }) {
             <Text style={styles.infoDetails}>Full Name</Text>
             <TextInput
                 style={styles.textBox}
-                value="Jane Shamne"
+                value={`${user.first_name} ${user.last_name}`}
                 editable={false}
             />
             <Text style={styles.infoDetails}>Phone number</Text>
             <TextInput
                 style={styles.textBox}
-                value="(407) 356-1234"
+                value= {`${user.phone}`}
                 editable={false}
             />
             <Text style={styles.infoDetails}>Reason</Text>
@@ -76,7 +40,6 @@ export default function YourInfo({ user }) {
                 placeholder={'Device'}
                 selectedValue={selectedDevice}
                 onSelect={(item) => setSelectedDevice(typeof item === 'object' ? item.value : item)}
-
             />
 
         </View>
@@ -102,7 +65,6 @@ const styles = StyleSheet.create({
     textBox: {
         fontSize: 16,
         color: Colors.default.textWhite,
-        //This is the only time this color shows up so, I'm not adding it to constants...
         backgroundColor: '#706F6F',
         borderRadius: 5,
         paddingLeft: 15,

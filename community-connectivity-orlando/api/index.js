@@ -5,7 +5,7 @@ import Constants from 'expo-constants';
 // console.log('Constants.expoConfig.extra.API_BASE_URL =', Constants.expoConfig.extra.API_BASE_URL);
 const API_baseURL = Constants.expoConfig.extra.URL;
 
-console.log('API_baseURL =', API_baseURL);
+//console.log('API_baseURL =', API_baseURL);
 // Create axios instance with base URL and timeout
 const api = axios.create({
     baseURL: API_baseURL,

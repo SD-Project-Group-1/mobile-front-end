@@ -9,8 +9,9 @@ export default function OrderStatus({ user, onActiveOrderFound }) {
     const { orders, refreshOrders } = useOrders(user?.id);
 
     const activeOrder = orders.find(order =>
-        ["Submitted", "Scheduled", "Checked out"].includes(order.borrow_status)
+        ["Submitted", "Scheduled", "Checked_out"].includes(order.borrow_status)
     );
+
 
     useEffect(() => {
         if (activeOrder) {
@@ -63,11 +64,16 @@ export default function OrderStatus({ user, onActiveOrderFound }) {
                     </View>
                 </View>
                 <View style={styles.OrderStatus}>
-                    <Text style={styles.returnText}>Return by {new Date(activeOrder.return_date).toLocaleString('default', {
-                        month: 'long',
-                        day: '2-digit',
-                        year: 'numeric'
-                    })}</Text>
+                        <Text style={styles.returnText}>
+                            {activeOrder?.borrow_status === 'Submitted'
+                                ? 'Pending Review'
+                                : `Return by ${new Date(activeOrder.return_date).toLocaleString('default', {
+                                    month: 'long',
+                                    day: '2-digit',
+                                    year: 'numeric'
+                                })}`}
+                        </Text>
+
                     <Text style={styles.statusInfo}>Status: {activeOrder.borrow_status}</Text>
                     <Text style={styles.deviceInfo}>Device ID: {activeOrder.device_id}</Text>
                 </View>
@@ -152,9 +158,9 @@ export default function OrderStatus({ user, onActiveOrderFound }) {
                             ? "Info: Return the device to the following address:"
                             : "Error: You don't have a device to return."}
                         message={activeOrder?.borrow_status === "Checked out"
-                        ?"10002 University Blvd, Orlando, FL 32817\n"
+                            ? activeOrder.device_location
                             : "Your order suggests that your are not in possession of a device."
-                    }
+                        }
                         onClose={() => setReturnDeviceModal(false)}
                         setTime={5000}
                     />
