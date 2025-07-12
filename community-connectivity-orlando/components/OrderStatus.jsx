@@ -9,7 +9,7 @@ export default function OrderStatus({ user, onActiveOrderFound }) {
     const { orders, refreshOrders } = useOrders(user?.id);
 
     const activeOrder = orders.find(order =>
-        ["Submitted", "Scheduled", "Checked_out"].includes(order.borrow_status)
+        ["Submitted", "Scheduled", "Checked out"].includes(order.borrow_status)
     );
 
     useEffect(() => {
