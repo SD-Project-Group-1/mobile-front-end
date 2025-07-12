@@ -340,16 +340,16 @@ export default function ProfileInfo(props) {
                         <View style={[styles.rowButton, {marginTop: 10}]}>
                             <Button
                                 title={<Text style={[styles.buttonText, {fontSize: 20}]}>Save</Text>}
-                                width={168}
-                                height={60}
+                                width={160}
+                                height={50}
                                 style={styles.button}
                                 variant="primary"
                                 onPress={saveProfileUpdate}
                             />
                             <Button
                                 title={<Text style={[styles.buttonText, {fontSize: 20}]}>Cancel</Text>}
-                                width={168}
-                                height={60}
+                                width={160}
+                                height={50}
                                 style={styles.button}
                                 variant="primary"
                                 onPress={() => {
@@ -496,6 +496,7 @@ const styles = StyleSheet.create({
         marginLeft: 7,
         marginRight: 7,
         marginTop: 2,
+        gap: 5,
     },
     disabledTextBox: {
         color: '#777777',
