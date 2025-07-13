@@ -8,7 +8,7 @@ import {useOrders} from "../hooks/useOrders";
 export default function OrderStatus({ user, onActiveOrderFound }) {
     const { orders, refreshOrders } = useOrders(user?.id);
 
-    const activeOrder = orders.find(order =>
+    const activeOrder = (orders || []).find(order =>
         ["Submitted", "Scheduled", "Checked_out"].includes(order.borrow_status)
     );
 
