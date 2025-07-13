@@ -7,7 +7,7 @@ export default function PreviousOrder({ user }) {
 
     const { orders } = useOrders(user?.id);
 
-    const previousOrders = orders.filter(order =>
+    const previousOrders = (orders || []).filter(order =>
         ["Cancelled", "Checked in", "Late"].includes(order.borrow_status)
     );
 

@@ -23,6 +23,21 @@ export const userAPI = {
         }
     },
 
+    // Reset password
+    async resetPassword(passwordData) {
+        try {
+            const res = await api.post('/user/reset', passwordData);
+            const { token } = res.data;
+            if (token) {
+                await SecureStore.setItemAsync('token', token);
+            }
+            return res.data;
+        } catch (error) {
+            console.error('resetPassword error:', error?.message || 'Failed to reset password.');
+            throw error;
+        }
+    },
+
     // Update user profile
     async updateUserProfile(userData) {
         try {
@@ -45,19 +60,4 @@ export const userAPI = {
             throw error;
         }
     },
-
-    // Reset password
-    async resetPassword(passwordData) {
-        try {
-            const res = await api.post('/user/reset', passwordData);
-            const { token } = res.data;
-            if (token) {
-                await SecureStore.setItemAsync('token', token);
-            }
-            return res.data;
-        } catch (error) {
-            console.error('resetPassword error:', error?.message || 'Failed to reset password.');
-            throw error;
-        }
-    }
 };
