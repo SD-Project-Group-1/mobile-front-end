@@ -1,0 +1,33 @@
+appId: host.exp.exponent
+
+# Test: Verify user can cancel an active reservation
+---
+- launchApp
+
+# Navigate to app in Expo Go
+- assertVisible: "community-connectivity-orlando"
+- tapOn: "community-connectivity-orlando"
+
+# Step 1: Login to the App
+# Sign Up Screen -> Login Screen
+- assertVisible: "Already have an account?"
+- tapOn: "  Login"
+- assertVisible: "Login to"
+- assertVisible: "Your Account"
+- tapOn: "user@example.com"
+- inputText: "babe@gmail.com"
+- tapOn: "Password"
+- inputText: "11111111"
+- tapOn:
+    point: "50%,60%" # Location of Login button
+- tapOn: "OK"
+
+# Step 2: Check if user has an active reservation or borrowed device
+# Home Screen
+- assertVisible: "Order Status"
+# Status that implies an Active Reservation
+- assertVisible: "Status: Submitted"
+- tapOn: "Hide?"
+- tapOn: "Cancel Order"
+- tapOn: "Confirm"
+- assertVisible: "Ain't Nobody Here but Us Chickens!"

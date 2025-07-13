@@ -8,7 +8,7 @@ export const locationAPI = {
             const queryString = Object.keys(params).length
                 ? '?' + new URLSearchParams(params).toString()
                 : '';
-            const res = await api.get(`/locations${queryString}`);
+            const res = await api.get(`/locations/getall${queryString}`);
             return res.data;
         } catch (error) {
             console.error('getAllLocations error:', error?.message || 'Failed to fetch locations.');
@@ -39,7 +39,7 @@ export const borrowAPI = {
             throw error;
         }
     },
-    // New borrow request (borrowData likely includes the deviceId and userId)
+    // New borrow request
     async borrowDevice(borrowData) {
         try {
             const res = await api.post('/borrow/create', borrowData);

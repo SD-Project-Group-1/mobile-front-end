@@ -5,7 +5,7 @@ import {router} from "expo-router";
 import PickupDetails from '../components/PickupDetails';
 import YourInfo from '../components/YourInfo';
 import {useEffect, useState} from "react";
-import {borrowAPI} from "../api/request";
+import {borrowAPI, locationAPI} from "../api/request";
 import {useForm} from "react-hook-form";
 import {useUser} from "../hooks/useUser";
 
@@ -13,16 +13,45 @@ import {useUser} from "../hooks/useUser";
 export default function Request() {
     const { user, loading } = useUser('/+not-found');
     const [selectedReason, setSelectedReason] = useState('');
+    const [foundLocation, setFoundLocation] = useState('');
 
     const { handleSubmit, reset, setValue } = useForm({
         defaultValues: {
             userId: '',
             borrow_date: new Date().toISOString().split('T')[0],
             user_location: '',
-            device_location: 'Smith Neighborhood Center',
+            device_location: '',
             reason_for_borrow: selectedReason,
         }
     });
+
+    const [matchedLocation, setMatchedLocation] = useState(null);
+
+    useEffect(() => {
+        const fetchAndFilterLocation = async () => {
+            if (foundLocation) {
+                try {
+                    const locationData = await locationAPI.getAllLocations();
+
+                    const foundLocationData = locationData.data.find(
+                        location => location.location_nickname === foundLocation
+                    );
+
+                    if (foundLocationData) {
+                        setMatchedLocation(foundLocationData);
+                        //console.log('Matched location:', matchedLocation.location_id);
+                    } else {
+                        console.log('No location found with nickname:', foundLocation);
+                    }
+
+                } catch (error) {
+                    console.error('Failed to fetch location data:', error);
+                }
+            }
+        };
+
+        fetchAndFilterLocation();
+    }, [foundLocation]);
 
     useEffect(() => {
         if (user) {
@@ -49,6 +78,7 @@ export default function Request() {
             return;
         }
 
+        console.log(matchedLocation.location_id);
         try {
             const borrowData = {
                 user_id: data.userId,
@@ -56,7 +86,7 @@ export default function Request() {
                 borrow_date: data.borrow_date,
                 return_date: null,
                 user_location: data.user_location,
-                device_location: data.device_location,
+                location_id: matchedLocation.location_id,
                 reason_for_borrow: selectedReason,
 
             };
@@ -81,6 +111,8 @@ export default function Request() {
         <View style={styles.container}>
             <PickupDetails
                 user={user}
+                foundLocation={foundLocation}
+                setFoundLocation={setFoundLocation}
             />
 
             <ScrollView style={styles.scrollView}>

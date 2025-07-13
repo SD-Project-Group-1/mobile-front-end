@@ -4,7 +4,7 @@ import {Colors} from "../constants/Colors";
 import Dropdown from '../components/ui/Dropdown';
 
 export default function YourInfo({ user, selectedReason, setSelectedReason }) {
-    const devices = ['Mobile Hotspot', 'Laptop', 'Tablet'];
+    const devices = ['Mobile_Hotspot', 'Laptop', 'Tablet'];
     const reasons = ['Job Search', 'School', 'Training', 'Other'];
 
 
