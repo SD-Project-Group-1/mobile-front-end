@@ -1,0 +1,20 @@
+appId: host.exp.exponent
+
+
+
+# Test: Verify outcome of user sign up on the app w/ no credentials
+---
+- launchApp
+
+# Navigate to app in Expo Go
+- assertVisible: "community-connectivity-orlando"
+- tapOn: "community-connectivity-orlando"
+
+# Sign Up Screen
+- assertVisible: "Sign Up"
+# Sign Up with no fields completed
+- tapOn: "Sign Up"
+# Ensure Error Text for uncompleted Fields appears
+- assertVisible: "Full name is required"
+- assertVisible: "Email is required"
+- assertVisible: "Password is required"

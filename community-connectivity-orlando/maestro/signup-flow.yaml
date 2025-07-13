@@ -1,0 +1,58 @@
+appId: host.exp.exponent
+
+
+
+# Test: Verify user sign up on the app w/ good credentials
+---
+- launchApp
+
+# Navigate to app in Expo Go
+- assertVisible: "community-connectivity-orlando"
+- tapOn: "community-connectivity-orlando"
+
+# Sign Up Screen
+- assertVisible: "Sign Up"
+# Full Name Field
+- tapOn: "Full Name"
+- inputText: "Jany Chaney"
+# Email Field
+- tapOn: "Email"
+- inputText: "Chaney@gmail.com"
+# Password Field
+- tapOn: "Password"
+- inputText: "111111111"
+- pressKey: Back
+# DOB Field
+- tapOn:
+    point: "50%,60%"
+- inputText: "01.01.1990"
+- pressKey: Back
+# Phone # Field
+- tapOn:
+    point: "50%,66%"
+- inputText: "123.123.1234"
+- pressKey: Back
+# Address Field
+- tapOn: "Address"
+- inputText: "123 Main Street"
+- pressKey: Back
+# Scroll to remaining Fields
+- swipe:
+    start: "5%,70%"
+    end: "5%,35%"
+# City Field
+- tapOn: "City"
+- inputText: "Orlando"
+- pressKey: Back
+# State Field
+- tapOn: "State (e.g. FL)"
+- inputText: "FL"
+- pressKey: Back
+# ZIP Code Field
+- tapOn: "ZIP Code"
+- inputText: "32817"
+- pressKey: Back
+- tapOn: "Sign Up"
+# Sign Up Screen -> Login Screen
+- tapOn: "OK"
+- assertVisible: "Login"

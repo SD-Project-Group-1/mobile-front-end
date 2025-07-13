@@ -4,26 +4,28 @@ import {Colors} from "../constants/Colors";
 import {zipcodeAPI} from "../api/zipcode";
 
 
-export default function PickupDetails({ user }) {
+export default function PickupDetails({ user, foundLocation, setFoundLocation }) {
     const [inRange, setInRange] = useState(null);
     const [nearestCenter, setNearestCenter] = useState('');
 
-
     useEffect(() => {
         const checkRange = async () => {
-
             try {
                 const location = await zipcodeAPI.checkZipcode(user.zip_code);
-                    setInRange(location.withinRange);
-                    if (location.nearestCenter) setNearestCenter(location.nearestCenter);
-                } catch (err) {
-                    console.error('Zipcode check failed:', err);
-                    setInRange(false);
+                setInRange(location.withinRange);
+                if (location.nearestCenter) {
+                    setNearestCenter(location.nearestCenter);
+                    setFoundLocation(location.nearestCenter + " Neighborhood Center");
+                    //console.log(foundLocation);
                 }
+            } catch (err) {
+                console.error('Zipcode check failed:', err);
+                setInRange(false);
+            }
         };
 
         checkRange();
-    }, [user?.zip_code]);
+    }, [user?.zip_code, setFoundLocation]);
 
     return (
         <View style={styles.container}>
@@ -37,7 +39,7 @@ export default function PickupDetails({ user }) {
 
                 {inRange === true && (
                     <Text style={styles.carryoutLocation}>
-                        Carry out at: {nearestCenter}
+                        Carry out at: {nearestCenter} Neighborhood Center
                     </Text>
                 )}
 

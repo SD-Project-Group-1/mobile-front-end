@@ -36,7 +36,6 @@ export default function OrderStatus({ user, onActiveOrderFound }) {
     const closeModal = () => {
         setConfirmCancelModal(false);
         {/* I need backend to implement a route for allowing users to cancel their own orders because I can't do that from here */}
-
         if (activeOrder?.borrow_status !== "Checked out") {
             setActiveOrder(prev => ({
                 ...prev,
@@ -148,9 +147,7 @@ export default function OrderStatus({ user, onActiveOrderFound }) {
                         setTime={5000}
                     />
 
-                    {/* Regular Modal for return device
-                     I'll get this done with request integration...
-                     */}
+                    {/* Regular Modal for return device */}
                     <Modal
                         visible={returnDeviceModal}
                         size="regular"

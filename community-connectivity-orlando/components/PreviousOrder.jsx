@@ -8,10 +8,10 @@ export default function PreviousOrder({ user }) {
     const { orders } = useOrders(user?.id);
 
     const previousOrders = (orders || []).filter(order =>
-        ["Cancelled", "Checked in", "Late"].includes(order.borrow_status)
+        ["Cancelled", "Checked_in", "Late"].includes(order.borrow_status)
     );
 
-    console.log(previousOrders.length)
+    //console.log(previousOrders.length)
 
     if (previousOrders) {
         return (

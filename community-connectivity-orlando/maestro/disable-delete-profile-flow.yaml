@@ -1,4 +1,6 @@
-appId: host.exp.Exponent
+appId: host.exp.exponent
+
+
 
 # Test: Verify user can not delete account if they have an active reservation or borrowed device
 ---
@@ -19,7 +21,7 @@ appId: host.exp.Exponent
 - tapOn: "Password"
 - inputText: "111111111"
 - tapOn:
-    point: "50%,51%" # Location of Login button
+    point: "50%,56%" # Location of Login button
 - tapOn: "OK"
 
 # Step 2: Check if user has an active reservation or borrowed device
