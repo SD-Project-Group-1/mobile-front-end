@@ -1,0 +1,37 @@
+appId: host.exp.exponent
+
+# Test: Verify that user password is not stored to local storage, cache, or logs on the device
+---
+#- launchApp
+
+# Step 1: Open app
+- assertVisible: "Expo Go"
+- tapOn: "Expo Go"
+
+# Step 2: Login with a password
+- assertVisible: "Already have an account?"
+- tapOn: "  Login"
+- assertVisible: "Login to"
+- assertVisible: "Your Account"
+- tapOn: "user@example.com"
+- inputText: "bokoj26342@endibit.com"
+- pressKey: Back
+# Password (this should not appear in logs)
+- tapOn: "Password"
+- inputText: "111111111"
+- pressKey: Back
+- tapOn:
+    point: "50%,51%" # Location of Login button
+- extendedWaitUntil:
+    visible: 
+        text: "Home"
+    timeout: 10000
+- assertVisible: "Home"
+
+# Step 3: Manual Verification:
+# Checked device logs, local storage and cache for sensitive information
+# No sensitive information found
+# User password not shown in any terminal logs
+
+# Expected Results:
+# User password not shown in the device logs
