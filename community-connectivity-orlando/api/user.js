@@ -1,4 +1,5 @@
 import api from './index';
+import * as SecureStore from 'expo-secure-store';
 
 export const userAPI = {
     // Get current user
@@ -19,21 +20,6 @@ export const userAPI = {
             return res.data;
         } catch (error) {
             console.error('getUserProfile error:', error?.message || 'Failed to get a specific user profile.');
-            throw error;
-        }
-    },
-
-    // Reset password
-    async resetPassword(passwordData) {
-        try {
-            const res = await api.post('/user/reset', passwordData);
-            const { token } = res.data;
-            if (token) {
-                await SecureStore.setItemAsync('token', token);
-            }
-            return res.data;
-        } catch (error) {
-            console.error('resetPassword error:', error?.message || 'Failed to reset password.');
             throw error;
         }
     },

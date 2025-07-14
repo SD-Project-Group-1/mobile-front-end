@@ -17,9 +17,9 @@ appId: host.exp.exponent
 - assertVisible: "Login to"
 - assertVisible: "Your Account"
 - tapOn: "user@example.com"
-- inputText: "two@mail.com"
+- inputText: # email address
 - tapOn: "Password"
-- inputText: "111111111"
+- inputText: # password
 - tapOn:
     point: "50%,56%" # Location of Login button
 - tapOn: "OK"

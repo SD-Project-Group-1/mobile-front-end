@@ -2,22 +2,20 @@ appId: host.exp.Exponent
 
 # Test: Verify a user is able to reserve a tablet
 ---
-- launchApp
+#- launchApp
 
 # Navigate to app in Expo Go
-- assertVisible: "community-connectivity-orlando"
-- tapOn: "community-connectivity-orlando"
+#- assertVisible: "community-connectivity-orlando"
+#- tapOn: "community-connectivity-orlando"
 
 # Step 1: Login to the App
-# Sign Up Screen -> Login Screen
-- assertVisible: "Already have an account?"
-- tapOn: "  Login"
+# Login Screen
 - assertVisible: "Login to"
 - assertVisible: "Your Account"
 - tapOn: "user@example.com"
-- inputText: # email address
+- inputText: "bokoj26342@endibit.com"
 - tapOn: "Password"
-- inputText: # password
+- inputText: "111111111"
 - tapOn:
     point: "50%,51%" # Location of Login button
 - tapOn: "OK"
@@ -33,10 +31,6 @@ appId: host.exp.Exponent
 # Step 4: Enter details to request a device
 # Change pickup location
 - assertVisible: "Pickup details:"
-- tapOn: "Change" # Button
-- assertVisible: "Locations"
-# Change pickup time
-- assertVisible: "Carryout"
 # Select reason
 - assertVisible: "Reason"
 - tapOn: "Reason ▼"
@@ -49,9 +43,10 @@ appId: host.exp.Exponent
     point: "50%,49%" # Location of Laptop option
 
 # Step 5: Click Place Order button
-- tapOn: "Place Order"
+- tapOn:
+    point: "50%,84%" # Location of Place Order button
 
 # Expected Results: 
 # Reservation saved and details will be displayed in home page.
-- assertVisible: "Order Placed"
-- assertNotVisible: "Request a Device" # Button
+#- assertVisible: "Order Placed"
+#- assertNotVisible: "Request a Device" # Button

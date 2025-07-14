@@ -1,4 +1,4 @@
-import api from './index';
+import api, { auth } from './index';
 import * as SecureStore from 'expo-secure-store';
 
 export const authAPI = {
@@ -25,6 +25,37 @@ export const authAPI = {
             throw error;
         }
     },
+
+    // Reset password request (sends email with reset link)
+    async resetPasswordRequest(email) {
+        try {
+            //console.log('reset password request URL:', auth.defaults.baseURL + '/request-reset');
+            //console.log('User email:', email);
+            const res = await auth.post('/request-reset', { email });
+            //console.log('Backend response:', res.data);
+            return res.data;
+        } catch (error) {
+            console.error('resetPassword error:', error?.message || 'Failed to reset password.');
+            throw error;
+        }
+    },
+
+    // Reset password request (sends email with reset link)
+    async resetPassword(passwordData) {
+        try {
+            const res = await auth.post('/reset-password', passwordData);
+            const { token } = res.data;
+            if (token) {
+                await SecureStore.setItemAsync('token', token);
+            }
+            return res.data;
+        } catch (error) {
+            console.error('resetPassword error:', error?.message || 'Failed to reset password.');
+            throw error;
+        }
+    },
+
+
 
     // Sign out user
     async signout() {

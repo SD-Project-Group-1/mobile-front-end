@@ -1,39 +1,37 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import {Colors} from "../constants/Colors";
 import {useRouter} from "expo-router";
 import Button from '../components/ui/Button';
-import { userAPI } from '../api/user';
+import { authAPI } from '../api/auth';
+import { useForm, Controller } from 'react-hook-form';
 
 export default function ResetPassword(){
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [sending, setSending] = useState(false); // state for sending email
     const router = useRouter();
 
-    const handleReset = async () => {
-        // Ensures passwords match
-        if (newPassword !== confirmPassword) {
-            console.log('Passwords do not match. Please try again.');
-            Alert.alert('Error', 'Passwords do not match. Please try again.');
-            return;
+    // React Hook Form setup
+    const {
+        control,
+        handleSubmit,
+        formState: {errors},
+        reset
+    } = useForm({
+        defaultValues: {
+            email: ''
         }
+    });
 
-        // Rule for password length
-        if (newPassword.length < 8) {
-            console.log('Password must be at least 8 characters long.');
-            Alert.alert('Error', 'Password must be at least 8 characters long.');
-            return;
-        }
+    const onSubmit = async (data) => {
+        setSending(true);
 
         try {
-            // Backend endpoint to reset password
-            await userAPI.resetPassword({
-                newPassword: newPassword
-            });
+            // Send password reset email request
+            await authAPI.resetPasswordRequest(data.email);
 
             Alert.alert(
                 'Success', 
-                'Password has been reset successfully!',
+                'Password reset email has been sent! Please check your email.',
                 [
                     {
                         text: 'OK',
@@ -45,57 +43,69 @@ export default function ResetPassword(){
         } catch (error) {
             console.error('Reset password error:', error);
             
-            // backend reset password is not implemented yet, checks if working
-            if (error.response?.status === 500 && error.response?.data?.includes('Later')) {
+            if (error.response?.status === 404) {
                 Alert.alert(
-                    'Coming Soon', 
-                    'Password reset is currently being worked on. Please try again later.',
-                    [
-                        {
-                            text: 'OK',
-                            onPress: () => router.push('/profile')
-                        }
-                    ]
+                    'User Not Found', 
+                    'No account found with this email. Please sign up for a new account.'
                 );
             } else {
                 Alert.alert(
                     'Reset Failed', 
-                    error.response?.data || 'Failed to reset password. Please try again.'
+                    error.response?.data || 'Failed to send reset email. Please try again.'
                 );
             }
-        } 
+        } finally {
+            setSending(false);
+        }
     };
 
     return(
         <View style ={styles.container}>
             <View style = {styles.card}>
                 <Text style = {styles.title}>Reset Password</Text>
-                <Text style = {styles.subtitle}>Please enter a New Password</Text>
+                <Text style = {styles.subtitle}>You will receive an email with a link</Text>
+                <Text style = {[styles.subtitle, {marginTop: -27}]}> to reset your password.</Text>
 
-                <Text style = {styles.label}>New Password</Text>
-                <TextInput
-                style = {styles.input}
-                secureTextEntry={true}
-                placeholder = "Password (min 8 characters)"
-                onChangeText = {setNewPassword}
-                value = {newPassword}
-                />
-
-                <Text style = {styles.label}> Confirm New Password </Text>
-                <TextInput
-                style = {styles.input}
-                secureTextEntry={true}
-                placeholder = "Confirm Password"
-                onChangeText = {setConfirmPassword}
-                value = {confirmPassword}
+                <Text style = {styles.label}>Email Address</Text>
+                
+                {/* Email Field */}
+                <Controller
+                    control={control}
+                    name="email"
+                    rules={{
+                        required: 'Email is required',
+                        pattern: {
+                            value: /^\S+@\S+$/i,
+                            message: 'Invalid email address'
+                        }
+                    }}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <View>
+                            <TextInput
+                                style={[styles.input, errors.email && styles.inputError]}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                placeholder="user@example.com"
+                                keyboardType="email-address"
+                                autoCapitalize="none"
+                                placeholderTextColor="gray"
+                                autoCorrect={false}
+                            />
+                            {errors.email && (
+                                <Text style={styles.errorText}>{errors.email.message}</Text>
+                            )}
+                        </View>
+                    )}
                 />
 
                 <Button
-                title = "Reset Password"
-                onPress = {handleReset}
+                title = {sending ? "Sending..." : "Send Reset Email"}
+                onPress = {handleSubmit(onSubmit)}
                 fullWidth
                 height = {50}
                 style = {styles.buttonSpacing}
+                disabled={sending}
                 />
                 
                 </View>
@@ -119,29 +129,44 @@ const styles = StyleSheet.create({
         borderColor:Colors.default.border,
     },
     subtitle: {
+        fontSize: 20,
         color: Colors.default.textWhite,
         textAlign: 'center',
-        marginBottom: 30,    
+        marginBottom: 35,    
         fontFamily: 'InstrumentSans',
     },
     title: {
-        fontSize: 20,
+        fontSize: 25,
         color: Colors.default.titlesSelected,
         textAlign: 'center',
-        marginBottom: 20,
+        margin: 30,
         fontFamily: 'InstrumentSans-Bold',
     },
     label:{
+        fontSize: 16,
         color: Colors.default.textWhite,
-        marginBottom: 18,
+        marginTop: 40,
+        marginBottom: 10,
         fontFamily: 'InstrumentSans',
     },
     input:{
         backgroundColor: Colors.default.textBox,
         color: Colors.default.textBlack,
         borderRadius: 5,
+        height: 45,
         padding: 10,
         marginBottom: 16,
+        fontFamily: 'InstrumentSans',
+    },
+    inputError: {
+        borderColor: '#ff6b6b',
+        borderWidth: 2,
+    },
+    errorText: {
+        color: '#ff6b6b',
+        fontSize: 16,
+        marginTop: -10,
+        marginBottom: 10,
         fontFamily: 'InstrumentSans',
     },
     buttonSpacing:{
