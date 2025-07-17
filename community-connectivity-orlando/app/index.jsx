@@ -4,6 +4,7 @@ import Button from '../components/ui/Button';
 import { Colors } from "../constants/Colors"
 import { useForm, Controller } from 'react-hook-form';
 import { authAPI } from '../api/auth.js';
+import { validateAge } from '../hooks/useValidation';
 
 export default function SignUp() {
 
@@ -30,6 +31,12 @@ export default function SignUp() {
     // Submit form data to backend
     const onSubmit = async (data) => {
         try {
+            // Age validation (still before signup)
+            const age = await validateAge(data.formDOB);
+            if (!age.valid) {
+                Alert.alert('Signup Failed', age.message);
+                return;
+            }
             // Split into first and last name
             const splitName = data.formName.trim().split(' ');
             const formFName = splitName[0] || '';
