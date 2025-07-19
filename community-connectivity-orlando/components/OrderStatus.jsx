@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import {Colors} from "../constants/Colors";
 import Button from '../components/ui/Button';
 import Modal from "./ui/Modal";
 import {useOrders} from "../hooks/useOrders";
+import {borrowAPI} from "../api/request";
 
 export default function OrderStatus({ user, onActiveOrderFound }) {
     const { orders, refreshOrders } = useOrders(user?.id);
@@ -26,6 +27,7 @@ export default function OrderStatus({ user, onActiveOrderFound }) {
     const [confirmCancelModal, setConfirmCancelModal] = useState(false);
     const [deviceSupportModal, setDeviceSupportModal] = useState(false);
     const [returnDeviceModal, setReturnDeviceModal] = useState(false);
+    const [cancelling, setCancelling] = useState(false);
 
 
     const handleConfirmCancel = () => {
@@ -33,21 +35,29 @@ export default function OrderStatus({ user, onActiveOrderFound }) {
         setConfirmCancelModal(true);
     };
 
-    const closeModal = () => {
+    const closeModal = async () => {
         setConfirmCancelModal(false);
-        {/* I need backend to implement a route for allowing users to cancel their own orders because I can't do that from here */}
-        if (activeOrder?.borrow_status !== "Checked out") {
-            setActiveOrder(prev => ({
-                ...prev,
-                borrow_status: "Cancelled"
-            }));
-            refreshOrders();
-            onActiveOrderFound(false);
-
+        
+        if (activeOrder?.borrow_status !== "Checked_out") {
+            try {
+                setCancelling(true);
+                
+                await borrowAPI.cancelRequest(activeOrder.borrow_id);
+                
+                await refreshOrders();
+                onActiveOrderFound(false);
+                
+            } catch (error) {
+                console.error('Failed to cancel order:', error);
+                Alert.alert(
+                    'Error',
+                    `Failed to cancel your order because the status is "${activeOrder.borrow_status}". Please try again or contact support.`
+                );
+            } finally {
+                setCancelling(false);
+            }
         }
     };
-
-
 
     if (activeOrder) {
         return (
@@ -74,12 +84,16 @@ export default function OrderStatus({ user, onActiveOrderFound }) {
                         </Text>
 
                     <Text style={styles.statusInfo}>Status: {activeOrder.borrow_status}</Text>
+                    <Text style={styles.deviceInfo}>
+                        Device: {activeOrder.device ? `${activeOrder.device.brand || ''} ${activeOrder.device.make || ''} ${activeOrder.device.model || ''}`.trim() : 'Device name not available'}
+                    </Text>
                     <Text style={styles.deviceInfo}>Device ID: {activeOrder.device_id}</Text>
                 </View>
                 <View style={styles.buttonRow}>
                     <Button
-                        title="Cancel Order"
+                        title={cancelling ? "Cancelling..." : "Cancel Order"}
                         onPress={() => setCancelOrderModal(true)}
+                        disabled={cancelling}
                         style={styles.flexButton}
                         textStyle={{
                             fontSize: 10,
@@ -124,13 +138,25 @@ export default function OrderStatus({ user, onActiveOrderFound }) {
                     <Modal
                         visible={confirmCancelModal}
                         size="regular"
-                        title={activeOrder?.borrow_status === "Checked out"
-                            ? "Error: Your order cannot be cancelled!"
+                        title={activeOrder?.borrow_status === "Checked_out"
+                            ? "Error"
+                            : activeOrder?.borrow_status === "Scheduled"
+                            ? "Error"
+                            : activeOrder?.borrow_status === "Submitted"
+                            ? "Error"
                             : "Success"}
-                        message={activeOrder?.borrow_status === "Checked out"
+                        message={activeOrder?.borrow_status === "Checked_out"
                             ? "You are currently in possession of a borrowed device."
+                            : activeOrder?.borrow_status === "Scheduled"
+                            ? "Your order is scheduled and cannot be cancelled at this time."
+                            : activeOrder?.borrow_status === "Submitted"
+                            ? "Your order is pending review and cannot be cancelled at this time."
                             : "Your order has been cancelled."}
-                        onClose={closeModal}
+                        onClose={activeOrder?.borrow_status === "Checked_out" || 
+                                activeOrder?.borrow_status === "Scheduled" || 
+                                activeOrder?.borrow_status === "Submitted" 
+                                ? () => setConfirmCancelModal(false) 
+                                : closeModal}
                         setTime={3000}
                     />
 
@@ -151,11 +177,11 @@ export default function OrderStatus({ user, onActiveOrderFound }) {
                     <Modal
                         visible={returnDeviceModal}
                         size="regular"
-                        title={activeOrder?.borrow_status === "Checked out"
-                            ? "Info: Return the device to the following address:"
+                        title={activeOrder?.borrow_status === "Checked_out"
+                            ? "Info: Return the device to the following address: "
                             : "Error: You don't have a device to return."}
-                        message={activeOrder?.borrow_status === "Checked out"
-                            ? activeOrder.device_location
+                        message={activeOrder?.borrow_status === "Checked_out"
+                            ? `${activeOrder.device?.location?.location_nickname || activeOrder.device_location || 'Address not available'}`
                             : "Your order suggests that your are not in possession of a device."
                         }
                         onClose={() => setReturnDeviceModal(false)}

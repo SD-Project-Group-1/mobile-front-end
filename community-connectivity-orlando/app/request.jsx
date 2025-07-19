@@ -13,6 +13,8 @@ import {useUser} from "../hooks/useUser";
 export default function Request() {
     const { user, loading } = useUser('/+not-found');
     const [selectedReason, setSelectedReason] = useState('');
+    const [selectedDevice, setSelectedDevice] = useState('');
+    const [deviceAvailability, setDeviceAvailability] = useState(null);
     const [foundLocation, setFoundLocation] = useState('');
 
     const { handleSubmit, reset, setValue } = useForm({
@@ -27,25 +29,42 @@ export default function Request() {
 
     const [matchedLocation, setMatchedLocation] = useState(null);
 
+    // Handle device availability change from YourInfo component
+    const availabilityChange = (deviceType, availability) => {
+        setDeviceAvailability(availability);
+        console.log('Device availability updated:', deviceType, availability);
+    };
+
     useEffect(() => {
         const fetchAndFilterLocation = async () => {
             if (foundLocation) {
                 try {
                     const locationData = await locationAPI.getAllLocations();
 
+                    // Data validation
+                    if (!locationData || !locationData.data || !Array.isArray(locationData.data)) {
+                        console.log('Data validation failed:', locationData);
+                        return;
+                    }
+
                     const foundLocationData = locationData.data.find(
-                        location => location.location_nickname === foundLocation
+                        location => location && location.location_nickname === foundLocation
                     );
+                    
+                    //console.log('locationNickname', foundLocationData?.location_nickname);
+                    //console.log('foundLocation', foundLocation);
 
                     if (foundLocationData) {
                         setMatchedLocation(foundLocationData);
                         //console.log('Matched location:', matchedLocation.location_id);
                     } else {
-                        console.log('No location found with nickname:', foundLocation);
+                        //console.log('No location found with nickname:', foundLocation);
+                        setMatchedLocation(null);
                     }
 
                 } catch (error) {
-                    console.error('Failed to fetch location data:', error);
+                    //console.error('Failed to fetch location data:', error);
+                    setMatchedLocation(null);
                 }
             }
         };
@@ -70,7 +89,7 @@ export default function Request() {
 
 
     const onSubmit = async (data) => {
-        if (!selectedReason || selectedReason === 'Reason') {
+        if (!selectedReason || selectedReason === 'Reason' || !selectedDevice || selectedDevice === 'Device') {
             Alert.alert(
                 'Missing Information',
                 'Please select a valid reason before submitting the form.'
@@ -78,7 +97,23 @@ export default function Request() {
             return;
         }
 
-        console.log(matchedLocation.location_id);
+        if (!deviceAvailability || !deviceAvailability.available) {
+            Alert.alert(
+                'Device Unavailable',
+                'Please select a different device, a different location, or try again later.'
+            );
+            return;
+        }
+
+        if (!matchedLocation) {
+            Alert.alert(
+                'Location Error',
+                'Unable to determine pickup location. Please try again.'
+            );
+            return;
+        }
+
+        //console.log(matchedLocation.location_id);
         try {
             const borrowData = {
                 user_id: data.userId,
@@ -88,7 +123,7 @@ export default function Request() {
                 user_location: data.user_location,
                 location_id: matchedLocation.location_id,
                 reason_for_borrow: selectedReason,
-
+                preferred_type: selectedDevice,
             };
 
             await borrowAPI.borrowDevice(borrowData);
@@ -111,8 +146,8 @@ export default function Request() {
         <View style={styles.container}>
             <PickupDetails
                 user={user}
-                foundLocation={foundLocation}
                 setFoundLocation={setFoundLocation}
+                matchedLocation={matchedLocation}
             />
 
             <ScrollView style={styles.scrollView}>
@@ -120,6 +155,10 @@ export default function Request() {
                     user={user}
                     selectedReason={selectedReason}
                     setSelectedReason={setSelectedReason}
+                    selectedDevice={selectedDevice}
+                    setSelectedDevice={setSelectedDevice}
+                    availabilityChange={availabilityChange}
+                    locationId={matchedLocation?.location_id}
                 />
             </ScrollView>
 

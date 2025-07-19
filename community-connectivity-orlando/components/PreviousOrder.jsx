@@ -4,16 +4,14 @@ import {Colors} from "../constants/Colors";
 import {useOrders} from "../hooks/useOrders";
 
 export default function PreviousOrder({ user }) {
-
+    
     const { orders } = useOrders(user?.id);
 
     const previousOrders = (orders || []).filter(order =>
         ["Cancelled", "Checked_in", "Late"].includes(order.borrow_status)
     );
 
-    //console.log(previousOrders.length)
-
-    if (previousOrders) {
+    if (previousOrders && previousOrders.length > 0) {
         return (
             <View>
                 {previousOrders?.map((order) => (
@@ -31,14 +29,24 @@ export default function PreviousOrder({ user }) {
 
                         <View style={styles.OrderStatus}>
                             <Text style={styles.statusText}>
-                                Returned {new Date(order.return_date).toLocaleString('default', {
-                                month: 'long',
-                                day: '2-digit',
-                                year: 'numeric'
-                            })}
+                                {order.borrow_status === "Cancelled" 
+                                    ? "Order Cancelled"
+                                    : order.borrow_status === "Late"
+                                    ? `Returned Late (${new Date(order.return_date).toLocaleString('default', {
+                                        month: 'long',
+                                        day: '2-digit',
+                                        year: 'numeric'
+                                    })})`
+                                    : `Returned ${new Date(order.return_date).toLocaleString('default', {
+                                        month: 'long',
+                                        day: '2-digit',
+                                        year: 'numeric'
+                                    })}`
+                                }
                             </Text>
-                            {/* I know how to fix this but, I'll implement it with request backend integration */}
-                            <Text style={styles.deviceInfo}>Device Name: Dell latitude 3550</Text>
+                            <Text style={styles.deviceInfo}>
+                                Device Name: {order.device ? `${order.device.brand || ''} ${order.device.make || ''} ${order.device.model || ''}`.trim() : 'Device name not available'}
+                            </Text>
                             <Text style={styles.deviceInfo}>Device ID: {order.device_id}</Text>
                         </View>
 
@@ -46,7 +54,7 @@ export default function PreviousOrder({ user }) {
                             <View style={styles.leftSection}>
                                 <Text style={styles.reasonLabel}>Reason: {order.reason_for_borrow}</Text>
                                 <Text style={styles.returnedToLabel}>Returned to:</Text>
-                                <Text style={styles.address}>{order.device_location}</Text>
+                                <Text style={styles.address}>{order.device?.location?.location_nickname || order.device_location || 'Location not available'}</Text>
                             </View>
                             <View style={styles.rightSection}>
                                 <Text style={styles.lateLabel}>Late?:</Text>

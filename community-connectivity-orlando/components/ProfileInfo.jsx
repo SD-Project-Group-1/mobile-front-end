@@ -200,7 +200,7 @@ export default function ProfileInfo(props) {
             };
 
             // update user profile to backend
-            await userAPI.updateUserProfile(updateData);
+            await userAPI.updateUserProfile(userData.id, updateData);
             
             // Update user data in profile
             setUserData(editField);

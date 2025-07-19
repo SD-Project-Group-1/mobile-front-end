@@ -10,7 +10,7 @@ export default function Profile() {
     const [profilePic, setProfilePic] = useState(null);
     
     // Use the useUser hook to manage user data
-    const { user, loading: userLoading, refreshUser } = useUser();
+    const { user, isVerified, loading: userLoading, refreshUser } = useUser();
     
     // Use the useOrders hook to get user's order history
     const { orders, loading: ordersLoading } = useOrders(user?.id);
@@ -35,6 +35,7 @@ export default function Profile() {
         <View style={styles.container}>
             <UserInfoPanel 
                 user={user}
+                isVerified={isVerified}
                 profilePic={picture => setProfilePic(picture)}
                 loading={userLoading} // Updates user data after profile update
             />

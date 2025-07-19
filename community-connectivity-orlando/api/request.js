@@ -71,18 +71,33 @@ export const borrowAPI = {
             throw error;
         }
     },
+    // Cancel a borrow request
+    async cancelRequest(borrowId) {
+        try {
+            const res = await api.patch(`/borrow/update/${borrowId}`, {
+                borrow_status: "Cancelled"
+            }, {
+                withCredentials: true
+            });
+            
+            return res.data;
+        } catch (error) {
+            console.error('cancelRequest error:', error?.message || 'Failed to cancel a borrow request.');
+            throw error;
+        }
+    },
 };
 
 // Device API
 export const deviceAPI = {
-    // Get all devices
-    async getAvailableDevices() {
+    // Get all available devices by location ID
+    async getAvailableDevices(locationId) {
         try {
-            const res = await api.get('/available');
+            const res = await api.get(`/devices/available?locationId=${locationId}`);
             return res.data;
         } catch (error) {
             console.error('getAvailableDevices error:', error?.message || 'Failed to get all available devices.');
             throw error;
         }
-    }
+    },
 };

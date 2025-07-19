@@ -1,4 +1,4 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View, RefreshControl} from 'react-native';
 import WelcomeBanner from '../components/WelcomeBanner';
 import OrderStatus from '../components/OrderStatus';
 import PreviousOrder from '../components/PreviousOrder';
@@ -7,13 +7,29 @@ import {Colors} from "../constants/Colors";
 import { router } from 'expo-router';
 import { useUser } from '../hooks/useUser';
 import {useState} from "react";
+import { useOrders } from '../hooks/useOrders';
 
 
 export default function Home() {
     //const { user, loading } = useUserContext();
     const { user, loading } = useUser('/+not-found');
     const [hasActiveOrder, setHasActiveOrder] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
+    const { refreshOrders } = useOrders(user?.id);
 
+    // Bonus: Pull to refresh
+    const onRefresh = async () => {
+        setRefreshing(true);
+        try {
+            if (user?.id) {
+                await refreshOrders();
+            }
+        } catch (error) {
+            console.error('Failed to refresh orders:', error);
+        } finally {
+            setRefreshing(false);
+        }
+    };
 
     if (loading) {
         return (
@@ -28,6 +44,14 @@ export default function Home() {
             <ScrollView
                 style={styles.scrollView}
                 contentContainerStyle={styles.scrollContent}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                        colors={[Colors.default.titlesSelected]}
+                        tintColor={Colors.default.titlesSelected}
+                    />
+                }
             >
                 <WelcomeBanner/>
                 <Text style={styles.title}>

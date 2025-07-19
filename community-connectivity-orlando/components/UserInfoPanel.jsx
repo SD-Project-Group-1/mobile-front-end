@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import ProfileIconInside from './ProfileIconInside';
 import { Colors } from "../constants/Colors";
 
-export default function UserInfoPanel({ user, profilePic, loading }) {
+export default function UserInfoPanel({ user, isVerified, profilePic, loading }) {
 
     // Show loading state if user data is still loading
     if (loading) {
@@ -32,7 +32,8 @@ export default function UserInfoPanel({ user, profilePic, loading }) {
         userID: user.id || '',
         address: addressField(user),
         phoneNumber: user.phone || '',
-        email: user.email || ''
+        email: user.email || '',
+        is_verified: isVerified ? 'Age Verified' : 'Age Not Verified',
     };
 
     return (
@@ -47,6 +48,7 @@ export default function UserInfoPanel({ user, profilePic, loading }) {
             <Text style={styles.text}>{profileData.address}</Text>
             <Text style={styles.text}>{profileData.phoneNumber}</Text>
             <Text style={styles.text}>{profileData.email}</Text>
+            <Text style={styles.text}>{profileData.is_verified}</Text>
         </View>
     );
 }
