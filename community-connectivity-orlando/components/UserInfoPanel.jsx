@@ -35,7 +35,6 @@ export default function UserInfoPanel({ user, isVerified, profilePic, loading })
         email: user.email || '',
         is_verified: isVerified ? 'Age Verified' : 'Age Not Verified',
     };
-    console.log('profileData.is_verified', profileData.is_verified)
 
     return (
         // User info panel

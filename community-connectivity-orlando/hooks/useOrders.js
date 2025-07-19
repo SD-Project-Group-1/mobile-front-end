@@ -6,13 +6,9 @@ export const useOrders = (userId) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        if (userId) {
-            loadOrders();
-        }
-    }, [userId]);
-
     const loadOrders = async () => {
+        if (!userId) return;
+        
         try {
             setLoading(true);
             setError(null);
@@ -20,8 +16,7 @@ export const useOrders = (userId) => {
             const response = await borrowAPI.getBorrowsUserId(userId);
 
             setOrders(response);
-            //console.log(`Found ${response.data.length} records for user ${userId}`);
-
+            //console.log(`Found ${response.length} records for user ${userId}`);
         } catch (err) {
             console.error('Failed to load orders:', userId);
             console.error('Failed to load orders:', err);
@@ -32,10 +27,24 @@ export const useOrders = (userId) => {
     };
 
     const refreshOrders = async () => {
-        if (userId) {
-            await loadOrders();
+        if (!userId) return;
+        
+        try {
+            const response = await borrowAPI.getBorrowsUserId(userId);
+            setOrders(response);
+            setError(null);
+            //console.log(`Refreshed: Found ${response.length} records for user ${userId}`);
+            return response;
+        } catch (err) {
+            //console.error('Refresh error:', err);
+            setError(err);
+            throw err;
         }
     };
+
+    useEffect(() => {
+        loadOrders();
+    }, [userId]);
 
     return {
         orders,
