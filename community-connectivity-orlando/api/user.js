@@ -25,9 +25,9 @@ export const userAPI = {
     },
 
     // Update user profile
-    async updateUserProfile(userData) {
+    async updateUserProfile(userId, userData) {
         try {
-            const res = await api.patch('/user/update', userData);
+            const res = await api.patch(`/user/update/${userId}`, userData);
             return res.data;
         } catch (error) {
             console.error('updateUserProfile error:', error?.message || 'Failed to update user profile.');

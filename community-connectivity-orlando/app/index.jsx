@@ -49,7 +49,7 @@ export default function SignUp() {
                 first_name: formFName,
                 last_name: formLName,
                 phone: data.formPhoneNum,
-                street_address: data.formAddress1,
+                street_address: data.formAddress1 + (data.formAddress2 ? (" " + data.formAddress2) : ""),
                 city: data.formCity,
                 state: data.formState,
                 zip_code: data.formZip,
@@ -61,10 +61,10 @@ export default function SignUp() {
             router.push('/login');
             reset();
         } catch (error) {
-            console.error('Signup error:', error);
+            console.error('Signup error:', error.response?.data?.error);
             Alert.alert(
                 'Signup Failed', 
-                error.response?.data || 'Signup failed because of an error. Please try again.'
+                `${error.response?.data?.error}. Must be within service area to sign up.` || 'Signup failed because of an error. Please try again.'
             );
         }
     };

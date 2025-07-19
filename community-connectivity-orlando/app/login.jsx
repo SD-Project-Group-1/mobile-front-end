@@ -23,7 +23,7 @@ export default function Login() {
     const onSubmit = async (data) => {
         try {
             await authAPI.login(data.email, data.password);
-            Alert.alert('Success', 'Login successful!');
+            // Alert.alert('Success', 'Login successful!');
             router.push('/home');
             reset();
         } catch (error) {
