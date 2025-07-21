@@ -31,7 +31,7 @@ export const authAPI = {
         try {
             //console.log('reset password request URL:', auth.defaults.baseURL + '/request-reset');
             //console.log('User email:', email);
-            const res = await auth.post('/request-reset', { email });
+            const res = await api.post('/auth/request-reset', { email });
             //console.log('Backend response:', res.data);
             return res.data;
         } catch (error) {
@@ -43,7 +43,7 @@ export const authAPI = {
     // Reset password request (sends email with reset link)
     async resetPassword(passwordData) {
         try {
-            const res = await auth.post('/reset-password', passwordData);
+            const res = await api.post('/auth/reset-password', passwordData);
             const { token } = res.data;
             if (token) {
                 await SecureStore.setItemAsync('token', token);
@@ -54,8 +54,6 @@ export const authAPI = {
             throw error;
         }
     },
-
-
 
     // Sign out user
     async signout() {

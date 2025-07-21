@@ -15,7 +15,7 @@ export default function Home() {
     const { user, loading } = useUser('/+not-found');
     const [hasActiveOrder, setHasActiveOrder] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
-    const { refreshOrders } = useOrders(user?.id);
+    const { orders, refreshOrders } = useOrders(user?.id);
 
     // Bonus: Pull to refresh
     const onRefresh = async () => {
@@ -59,12 +59,14 @@ export default function Home() {
                 </Text>
                 <OrderStatus
                     user={user}
+                    orders={orders}
+                    refreshOrders={refreshOrders}
                     onActiveOrderFound={setHasActiveOrder}
                 />
                 <Text style={styles.title}>
                     Previous Orders
                 </Text>
-                <PreviousOrder user={user} />
+                <PreviousOrder user={user} orders={orders} refreshOrders={refreshOrders} />
             </ScrollView>
 
             {!hasActiveOrder && (

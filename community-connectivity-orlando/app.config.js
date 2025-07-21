@@ -36,10 +36,9 @@ export default {
         },
         extra: {
             URL: process.env.API_URL,
-            AUTH_URL: process.env.URL_AUTH,
             eas: {
                 projectId: process.env.EXPO_PROJECT_ID,
             }
-        }
+        },
     }
 };

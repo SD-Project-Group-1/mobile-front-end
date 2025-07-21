@@ -48,6 +48,12 @@ export default function PickupDetails({ user, setFoundLocation, matchedLocation 
         checkRange();
     }, [user?.zip_code, zipcodeChecked, setFoundLocation]);
 
+    useEffect(() => {
+        if (inRange === true) {
+            dropDownLocations();
+        }
+    }, [inRange]);
+
     const dropDownLocations = async () => {
         setLoading(true);
         try {
@@ -122,7 +128,7 @@ export default function PickupDetails({ user, setFoundLocation, matchedLocation 
                 {inRange === true && (
                     <>
                         <Text style={styles.carryoutLocation}>
-                            Carry out at: {matchedLocation?.location_nickname || 'Location not available'}
+                            Carry out at: {matchedLocation?.location_nickname || 'No devices or locations available'}
                         </Text>
                         <Text style={styles.carryoutLocation}>
                             Address: {matchedLocation?.street_address || 'Address not available'}, {matchedLocation?.city || ''}, {matchedLocation?.state || ''} {matchedLocation?.zip_code || ''}
@@ -174,7 +180,7 @@ export default function PickupDetails({ user, setFoundLocation, matchedLocation 
                                                 {location.street_address}, {location.city}, {location.state} {location.zip_code}
                                             </Text>
                                             <Text style={styles.deviceCount}>
-                                                {location.availableDeviceCount} device(s) available
+                                                {location.availableDeviceCount} device type(s) available
                                             </Text>
                                         </TouchableOpacity>
                                     ))

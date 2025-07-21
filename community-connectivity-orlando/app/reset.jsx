@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, TextInput, StyleSheet, Alert, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import {Colors} from "../constants/Colors";
 import {useRouter} from "expo-router";
 import Button from '../components/ui/Button';
@@ -14,8 +14,7 @@ export default function ResetPassword(){
     const {
         control,
         handleSubmit,
-        formState: {errors},
-        reset
+        formState: {errors}
     } = useForm({
         defaultValues: {
             email: ''
@@ -60,57 +59,61 @@ export default function ResetPassword(){
     };
 
     return(
-        <View style ={styles.container}>
-            <View style = {styles.card}>
-                <Text style = {styles.title}>Reset Password</Text>
-                <Text style = {styles.subtitle}>You will receive an email with a link</Text>
-                <Text style = {[styles.subtitle, {marginTop: -27}]}> to reset your password.</Text>
+        <View style={styles.container}>
+            <KeyboardAvoidingView
+                style={{flex: 1}}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+            >
+                <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'center'}} keyboardShouldPersistTaps="handled">
+                    <View style={styles.card}>
+                        <Text style={styles.title}>Reset Password</Text>
+                        <Text style={styles.subtitle}>You will receive an email with a link</Text>
+                        <Text style={[styles.subtitle, {marginTop: -27}]}> to reset your password.</Text>
 
-                <Text style = {styles.label}>Email Address</Text>
-                
-                {/* Email Field */}
-                <Controller
-                    control={control}
-                    name="email"
-                    rules={{
-                        required: 'Email is required',
-                        pattern: {
-                            value: /^\S+@\S+$/i,
-                            message: 'Invalid email address'
-                        }
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <View>
-                            <TextInput
-                                style={[styles.input, errors.email && styles.inputError]}
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
-                                placeholder="user@example.com"
-                                keyboardType="email-address"
-                                autoCapitalize="none"
-                                placeholderTextColor="gray"
-                                autoCorrect={false}
-                            />
-                            {errors.email && (
-                                <Text style={styles.errorText}>{errors.email.message}</Text>
+                        <Text style={styles.label}>Email Address</Text>
+                        {/* Email Field */}
+                        <Controller
+                            control={control}
+                            name="email"
+                            rules={{
+                                required: 'Email is required',
+                                pattern: {
+                                    value: /^\S+@\S+$/i,
+                                    message: 'Invalid email address'
+                                }
+                            }}
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <View>
+                                    <TextInput
+                                        style={[styles.input, errors.email && styles.inputError]}
+                                        onBlur={onBlur}
+                                        onChangeText={onChange}
+                                        value={value}
+                                        placeholder="user@example.com"
+                                        keyboardType="email-address"
+                                        autoCapitalize="none"
+                                        placeholderTextColor="gray"
+                                        autoCorrect={false}
+                                    />
+                                    {errors.email && (
+                                        <Text style={styles.errorText}>{errors.email.message}</Text>
+                                    )}
+                                </View>
                             )}
-                        </View>
-                    )}
-                />
-
-                <Button
-                title = {sending ? "Sending..." : "Send Reset Email"}
-                onPress = {handleSubmit(onSubmit)}
+                        />
+                    </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
+            <Button
+                title={sending ? "Sending..." : "Send Reset Email"}
+                onPress={handleSubmit(onSubmit)}
                 fullWidth
-                height = {50}
-                style = {styles.buttonSpacing}
+                height={50}
+                style={styles.buttonSpacing}
                 disabled={sending}
-                />
-                
-                </View>
-             </View>
-            
+            />
+        </View>
     );
 }
 

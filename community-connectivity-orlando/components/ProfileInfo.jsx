@@ -41,7 +41,7 @@ export default function ProfileInfo(props) {
                 firstName: user.first_name || '',
                 lastName: user.last_name || '',
                 phoneNumber: user.phone || '',
-                birthdate: user.dob ? new Date(user.dob).toLocaleDateString() : '',
+                birthdate: user.dob ? user.dob.split('T')[0].split('-').slice(1).join('-') + '-' + user.dob.split('T')[0].split('-')[0] : '',
                 address: addressField(user),
                 email: user.email || '',
                 id: user.id || ''
@@ -160,8 +160,7 @@ export default function ProfileInfo(props) {
             
             // Error if user has active reservation, device rental, or other error
             if (error.response?.status === 400 && error.response?.data?.includes('active reservation')) {
-                setConfirmDeleteModal(false);
-                setEditErrorModal(true);
+                setConfirmDeleteModal(true);
             } else {
                 setConfirmDeleteModal(true);
                 //Alert.alert(
