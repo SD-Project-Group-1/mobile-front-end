@@ -1,4 +1,4 @@
-import {Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, KeyboardAvoidingView, Platform} from 'react-native';
 import { router } from 'expo-router';
 import Button from '../components/ui/Button';
 import { Colors } from "../constants/Colors"
@@ -95,320 +95,324 @@ export default function SignUp() {
     
 
     return (
-
         <View style={styles.container}>
-            <Text style={styles.text}>Community Resource Center</Text>
-            <Text style={styles.title}>Create Your</Text>
-            <Text style={styles.title}>Account</Text>
+            <KeyboardAvoidingView
+                style={{flex: 1}}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+            >
+                <Text style={styles.text}>Community Resource Center</Text>
+                <Text style={styles.title}>Create Your</Text>
+                <Text style={styles.title}>Account</Text>
 
-            <ScrollView style={styles.column}>
-
-                {/* Name Field */}
-                <Controller
-                    control={control}
-                    name="formName"
-                    rules={{
-                        required: 'Full name is required',
-                        minLength: {
-                            value: 2,
-                            message: 'Name must be at least 2 characters'
-                        },
-                        // Validate that there is first and last name
-                        validate: (value) => {
-                            const splitName = value.trim().split(' ');
-                            if (splitName.length < 2) {
-                                return 'Please enter both first and last name';
+                <ScrollView style={styles.column} keyboardShouldPersistTaps="handled">
+                    {/* Name Field */}
+                    <Controller
+                        control={control}
+                        name="formName"
+                        rules={{
+                            required: 'Full name is required',
+                            minLength: {
+                                value: 2,
+                                message: 'Name must be at least 2 characters'
+                            },
+                            // Validate that there is first and last name
+                            validate: (value) => {
+                                const splitName = value.trim().split(' ');
+                                if (splitName.length < 2) {
+                                    return 'Please enter both first and last name';
+                                }
+                                return true;
                             }
-                            return true;
-                        }
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <View>
-                            <TextInput
-                                style={[styles.input, errors.formName && styles.inputError]}
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
-                                placeholder="Full Name"
-                                placeholderTextColor="gray"
-                            />
-                            {errors.formName && (
-                                <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formName.message}</Text>
-                            )}
-                        </View>
-                    )}
-                />
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <View>
+                                <TextInput
+                                    style={[styles.input, errors.formName && styles.inputError]}
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value}
+                                    placeholder="Full Name"
+                                    placeholderTextColor="gray"
+                                />
+                                {errors.formName && (
+                                    <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formName.message}</Text>
+                                )}
+                            </View>
+                        )}
+                    />
 
-                {/* Email Field */}
-                <Controller
-                    control={control}
-                    name="formEmail"
-                    rules={{
-                        required: 'Email is required',
-                        pattern: {
-                            value: /^\S+@\S+$/i,
-                            message: 'Invalid email address'
-                        }
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <View>
-                            <TextInput
-                                style={[styles.input, errors.formEmail && styles.inputError]}
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
-                                placeholder="Email"
-                                keyboardType="email-address"
-                                autoCapitalize="none"
-                                placeholderTextColor="gray"
-                            />
-                            {errors.formEmail && (
-                                <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formEmail.message}</Text>
-                            )}
-                        </View>
-                    )}
-                />
+                    {/* Email Field */}
+                    <Controller
+                        control={control}
+                        name="formEmail"
+                        rules={{
+                            required: 'Email is required',
+                            pattern: {
+                                value: /^\S+@\S+$/i,
+                                message: 'Invalid email address'
+                            }
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <View>
+                                <TextInput
+                                    style={[styles.input, errors.formEmail && styles.inputError]}
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value}
+                                    placeholder="Email"
+                                    keyboardType="email-address"
+                                    autoCapitalize="none"
+                                    placeholderTextColor="gray"
+                                />
+                                {errors.formEmail && (
+                                    <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formEmail.message}</Text>
+                                )}
+                            </View>
+                        )}
+                    />
 
-                {/* Password Field */}
-                <Controller
-                    control={control}
-                    name="formPassword"
-                    rules={{
-                        required: 'Password is required',
-                        minLength: {
-                            value: 8,
-                            message: 'Password must have at least 8 characters'
-                        }
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <View>
-                            <TextInput
-                                style={[styles.input, errors.formPassword && styles.inputError]}
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
-                                placeholder="Password"
-                                secureTextEntry={true}
-                                placeholderTextColor="gray"
-                            />
-                            {errors.formPassword && (
-                                <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formPassword.message}</Text>
-                            )}
-                        </View>
-                    )}
-                />
+                    {/* Password Field */}
+                    <Controller
+                        control={control}
+                        name="formPassword"
+                        rules={{
+                            required: 'Password is required',
+                            minLength: {
+                                value: 8,
+                                message: 'Password must have at least 8 characters'
+                            }
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <View>
+                                <TextInput
+                                    style={[styles.input, errors.formPassword && styles.inputError]}
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value}
+                                    placeholder="Password"
+                                    secureTextEntry={true}
+                                    placeholderTextColor="gray"
+                                />
+                                {errors.formPassword && (
+                                    <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formPassword.message}</Text>
+                                )}
+                            </View>
+                        )}
+                    />
 
-                {/* DOB Field */}
-                <Controller
-                    control={control}
-                    name="formDOB"
-                    rules={{
-                        required: 'Date of birth is required',
-                        pattern: {
-                            value: /^[0-9+\-\s()]+$/,
-                            message: 'Invalid DOB'
-                        }
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <View>
-                            <TextInput
-                                style={[styles.input, errors.formDOB && styles.inputError]}
-                                onBlur={onBlur}
-                                onChangeText={(dob) => onChange(formatDOB(dob))}
-                                value={value}
-                                placeholder="mm-dd-yyyy (use 01.01.1990)"
-                                keyboardType="numeric"
-                                minLength={10}
-                                maxLength={10}
-                                placeholderTextColor="gray"
-                            />
-                            {errors.formDOB && (
-                                <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formDOB.message}</Text>
-                            )}
-                        </View>
-                    )}
+                    {/* DOB Field */}
+                    <Controller
+                        control={control}
+                        name="formDOB"
+                        rules={{
+                            required: 'Date of birth is required',
+                            pattern: {
+                                value: /^[0-9+\-\s()]+$/,
+                                message: 'Invalid DOB'
+                            }
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <View>
+                                <TextInput
+                                    style={[styles.input, errors.formDOB && styles.inputError]}
+                                    onBlur={onBlur}
+                                    onChangeText={(dob) => onChange(formatDOB(dob))}
+                                    value={value}
+                                    placeholder="mm-dd-yyyy (use 01.01.1990)"
+                                    keyboardType="numeric"
+                                    minLength={10}
+                                    maxLength={10}
+                                    placeholderTextColor="gray"
+                                />
+                                {errors.formDOB && (
+                                    <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formDOB.message}</Text>
+                                )}
+                            </View>
+                        )}
 
-                />
+                    />
 
 
-                {/* Phone Field */}
-                <Controller
-                    control={control}
-                    name="formPhoneNum"
-                    rules={{
-                        required: 'Phone number is required',
-                        pattern: {
-                            value: /^[0-9+\-\s()]+$/,
-                            message: 'Invalid phone number'
-                        }
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <View>
-                            <TextInput
-                                style={[styles.input, errors.formPhoneNum && styles.inputError]}
-                                onBlur={onBlur}
-                                onChangeText={(number) => onChange(formatPhoneNum(number))}
-                                value={value}
-                                placeholder="Phone Number (use 123.456.7890)"
-                                keyboardType="numeric"
-                                placeholderTextColor="gray"
-                                maxLength={14}
-                                minLength={14}
-                            />
-                            {errors.formPhoneNum && (
-                                <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formPhoneNum.message}</Text>
-                            )}
-                        </View>
-                    )}
-                />
+                    {/* Phone Field */}
+                    <Controller
+                        control={control}
+                        name="formPhoneNum"
+                        rules={{
+                            required: 'Phone number is required',
+                            pattern: {
+                                value: /^[0-9+\-\s()]+$/,
+                                message: 'Invalid phone number'
+                            }
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <View>
+                                <TextInput
+                                    style={[styles.input, errors.formPhoneNum && styles.inputError]}
+                                    onBlur={onBlur}
+                                    onChangeText={(number) => onChange(formatPhoneNum(number))}
+                                    value={value}
+                                    placeholder="Phone Number (use 123.456.7890)"
+                                    keyboardType="numeric"
+                                    placeholderTextColor="gray"
+                                    maxLength={14}
+                                    minLength={14}
+                                />
+                                {errors.formPhoneNum && (
+                                    <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formPhoneNum.message}</Text>
+                                )}
+                            </View>
+                        )}
+                    />
 
-                {/* Address 1 Field */}
-                <Controller
-                    control={control}
-                    name="formAddress1"
-                    rules={{
-                        required: 'Address is required',
-                        minLength: {
-                            value: 2,
-                            message: 'Name must be at least 2 characters'
-                        }
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <View>
-                            <TextInput
-                                style={[styles.input, errors.formAddress1 && styles.inputError]}
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
-                                placeholder="Address"
-                                placeholderTextColor="gray"
-                            />
-                            {errors.formAddress1 && (
-                                <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formAddress1.message}</Text>
-                            )}
-                        </View>
-                    )}
-                />
+                    {/* Address 1 Field */}
+                    <Controller
+                        control={control}
+                        name="formAddress1"
+                        rules={{
+                            required: 'Address is required',
+                            minLength: {
+                                value: 2,
+                                message: 'Name must be at least 2 characters'
+                            }
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <View>
+                                <TextInput
+                                    style={[styles.input, errors.formAddress1 && styles.inputError]}
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value}
+                                    placeholder="Address"
+                                    placeholderTextColor="gray"
+                                />
+                                {errors.formAddress1 && (
+                                    <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formAddress1.message}</Text>
+                                )}
+                            </View>
+                        )}
+                    />
 
-                {/* Address 2 Field */}
-                <Controller
-                    control={control}
-                    name="formAddress2"
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <View>
-                            <TextInput
-                                style={[styles.input]}
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
-                                placeholder="Address 2 (Optional)"
-                                placeholderTextColor="gray"
-                            />
-                        </View>
-                    )}
-                />
+                    {/* Address 2 Field */}
+                    <Controller
+                        control={control}
+                        name="formAddress2"
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <View>
+                                <TextInput
+                                    style={[styles.input]}
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value}
+                                    placeholder="Address 2 (Optional)"
+                                    placeholderTextColor="gray"
+                                />
+                            </View>
+                        )}
+                    />
 
-                {/* City Field */}
-                <Controller
-                    control={control}
-                    name="formCity"
-                    rules={{
-                        required: 'City is required',
-                        minLength: {
-                            value: 2,
-                            message: 'Name must be at least 2 characters'
-                        }
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <View>
-                            <TextInput
-                                style={[styles.input, errors.formCity && styles.inputError]}
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
-                                placeholder="City"
-                                keyboardType="default"
-                                autoCapitalize="words"
-                                placeholderTextColor="gray"
-                            />
-                            {errors.formCity && (
-                                <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formCity.message}</Text>
-                            )}
-                        </View>
-                    )}
-                />
+                    {/* City Field */}
+                    <Controller
+                        control={control}
+                        name="formCity"
+                        rules={{
+                            required: 'City is required',
+                            minLength: {
+                                value: 2,
+                                message: 'Name must be at least 2 characters'
+                            }
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <View>
+                                <TextInput
+                                    style={[styles.input, errors.formCity && styles.inputError]}
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value}
+                                    placeholder="City"
+                                    keyboardType="default"
+                                    autoCapitalize="words"
+                                    placeholderTextColor="gray"
+                                />
+                                {errors.formCity && (
+                                    <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formCity.message}</Text>
+                                )}
+                            </View>
+                        )}
+                    />
 
-                {/* State Field */}
-                <Controller
-                    control={control}
-                    name="formState"
-                    rules={{
-                        required: 'State is required',
-                        minLength: {
-                            value: 2,
-                            message: 'Name must be at least 2 characters'
-                        }
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <View>
-                            <TextInput
-                                style={[styles.input, errors.formState && styles.inputError]}
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
-                                placeholder="State (e.g. FL)"
-                                keyboardType="default"
-                                autoCapitalize="characters"
-                                maxLength={2}
-                                minLength={2}
-                                placeholderTextColor="gray"
-                            />
-                            {errors.formState && (
-                                <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formState.message}</Text>
-                            )}
-                        </View>
-                    )}
-                />
+                    {/* State Field */}
+                    <Controller
+                        control={control}
+                        name="formState"
+                        rules={{
+                            required: 'State is required',
+                            minLength: {
+                                value: 2,
+                                message: 'Name must be at least 2 characters'
+                            }
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <View>
+                                <TextInput
+                                    style={[styles.input, errors.formState && styles.inputError]}
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value}
+                                    placeholder="State (e.g. FL)"
+                                    keyboardType="default"
+                                    autoCapitalize="characters"
+                                    maxLength={2}
+                                    minLength={2}
+                                    placeholderTextColor="gray"
+                                />
+                                {errors.formState && (
+                                    <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formState.message}</Text>
+                                )}
+                            </View>
+                        )}
+                    />
 
-                {/* ZIP Field */}
-                <Controller
-                    control={control}
-                    name="formZip"
-                    rules={{
-                        required: 'ZIP Code is required',
-                        pattern: {
-                            value: /^[0-9+\-\s()]+$/,
-                            message: 'Invalid ZIP Code'
-                        }
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <View>
-                            <TextInput
-                                style={[styles.input, errors.formZip && styles.inputError]}
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
-                                placeholder="ZIP Code"
-                                keyboardType="phone-pad"
-                                placeholderTextColor="gray"
-                                maxLength={5}
-                                minLength={5}
-                            />
-                            {errors.formZip && (
-                                <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formZip.message}</Text>
-                            )}
-                        </View>
-                    )}
-                />
-                {/* Scroll Space lmao */}
-                <View style={{ height: 250 }} />
-            </ScrollView>
+                    {/* ZIP Field */}
+                    <Controller
+                        control={control}
+                        name="formZip"
+                        rules={{
+                            required: 'ZIP Code is required',
+                            pattern: {
+                                value: /^[0-9+\-\s()]+$/,
+                                message: 'Invalid ZIP Code'
+                            }
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <View>
+                                <TextInput
+                                    style={[styles.input, errors.formZip && styles.inputError]}
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value}
+                                    placeholder="ZIP Code"
+                                    keyboardType="phone-pad"
+                                    placeholderTextColor="gray"
+                                    maxLength={5}
+                                    minLength={5}
+                                />
+                                {errors.formZip && (
+                                    <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formZip.message}</Text>
+                                )}
+                            </View>
+                        )}
+                    />
+                    {/* Scroll Space lmao */}
+                    <View style={{ height: 250 }} />
+                </ScrollView>
+            </KeyboardAvoidingView>
             <View style={styles.footer}>
-            <Button
-                title="Sign Up"
-                height={66}
-                onPress={handleSubmit(onSubmit)}
-            />
+                <Button
+                    title="Sign Up"
+                    height={66}
+                    onPress={handleSubmit(onSubmit)}
+                />
                 <View style={styles.row}>
                     <Text style={styles.link}>
                         Already have an account?

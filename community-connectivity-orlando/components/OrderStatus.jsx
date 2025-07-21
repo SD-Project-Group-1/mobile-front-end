@@ -3,11 +3,9 @@ import { View, Text, StyleSheet, Alert } from 'react-native';
 import {Colors} from "../constants/Colors";
 import Button from '../components/ui/Button';
 import Modal from "./ui/Modal";
-import {useOrders} from "../hooks/useOrders";
 import {borrowAPI} from "../api/request";
 
-export default function OrderStatus({ user, onActiveOrderFound }) {
-    const { orders, refreshOrders } = useOrders(user?.id);
+export default function OrderStatus({ user, orders, refreshOrders, onActiveOrderFound }) {
 
     const activeOrder = (orders || []).find(order =>
         ["Submitted", "Scheduled", "Checked_out"].includes(order.borrow_status)
@@ -38,7 +36,7 @@ export default function OrderStatus({ user, onActiveOrderFound }) {
     const closeModal = async () => {
         setConfirmCancelModal(false);
         
-        if (activeOrder?.borrow_status !== "Checked_out") {
+        if (activeOrder?.borrow_status === "Submitted") {
             try {
                 setCancelling(true);
                 
@@ -49,10 +47,6 @@ export default function OrderStatus({ user, onActiveOrderFound }) {
                 
             } catch (error) {
                 console.error('Failed to cancel order:', error);
-                Alert.alert(
-                    'Error',
-                    `Failed to cancel your order because the status is "${activeOrder.borrow_status}". Please try again or contact support.`
-                );
             } finally {
                 setCancelling(false);
             }
@@ -93,7 +87,7 @@ export default function OrderStatus({ user, onActiveOrderFound }) {
                     <Button
                         title={cancelling ? "Cancelling..." : "Cancel Order"}
                         onPress={() => setCancelOrderModal(true)}
-                        disabled={cancelling}
+                        disabled={cancelling || activeOrder?.borrow_status !== "Submitted"}
                         style={styles.flexButton}
                         textStyle={{
                             fontSize: 10,
@@ -139,24 +133,12 @@ export default function OrderStatus({ user, onActiveOrderFound }) {
                         visible={confirmCancelModal}
                         size="regular"
                         title={activeOrder?.borrow_status === "Checked_out"
-                            ? "Error"
-                            : activeOrder?.borrow_status === "Scheduled"
-                            ? "Error"
-                            : activeOrder?.borrow_status === "Submitted"
-                            ? "Error"
+                            ? "Error: Your order cannot be cancelled!"
                             : "Success"}
                         message={activeOrder?.borrow_status === "Checked_out"
                             ? "You are currently in possession of a borrowed device."
-                            : activeOrder?.borrow_status === "Scheduled"
-                            ? "Your order is scheduled and cannot be cancelled at this time."
-                            : activeOrder?.borrow_status === "Submitted"
-                            ? "Your order is pending review and cannot be cancelled at this time."
                             : "Your order has been cancelled."}
-                        onClose={activeOrder?.borrow_status === "Checked_out" || 
-                                activeOrder?.borrow_status === "Scheduled" || 
-                                activeOrder?.borrow_status === "Submitted" 
-                                ? () => setConfirmCancelModal(false) 
-                                : closeModal}
+                        onClose={closeModal}
                         setTime={3000}
                     />
 
@@ -181,7 +163,7 @@ export default function OrderStatus({ user, onActiveOrderFound }) {
                             ? "Info: Return the device to the following address: "
                             : "Error: You don't have a device to return."}
                         message={activeOrder?.borrow_status === "Checked_out"
-                            ? `${activeOrder.device?.location?.location_nickname || activeOrder.device_location || 'Address not available'}`
+                            ? `${activeOrder.device?.location?.location_nickname || activeOrder.device_location || 'Address not available'}\n${activeOrder.device?.location?.street_address}, ${activeOrder.device?.location?.city}, ${activeOrder.device?.location?.state} ${activeOrder.device?.location?.zip_code}`
                             : "Your order suggests that your are not in possession of a device."
                         }
                         onClose={() => setReturnDeviceModal(false)}

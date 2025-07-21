@@ -4,18 +4,11 @@ import Constants from 'expo-constants';
 
 // console.log('Constants.expoConfig.extra.API_BASE_URL =', Constants.expoConfig.extra.API_BASE_URL);
 const API_baseURL = Constants.expoConfig.extra.URL;
-const API_authURL = Constants.expoConfig.extra.AUTH_URL;
 
 //console.log('API_baseURL =', API_baseURL);
 // Create axios instance with base URL and timeout
 const api = axios.create({
     baseURL: API_baseURL,
-    timeout: 10000,
-});
-
-// Create axios instance with base URL and timeout for password reset
-const auth = axios.create({
-    baseURL: API_authURL,
     timeout: 10000,
 });
 
@@ -40,4 +33,3 @@ api.interceptors.response.use(
 );
 
 export default api;
-export { auth };

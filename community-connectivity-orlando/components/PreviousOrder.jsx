@@ -1,12 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import {Colors} from "../constants/Colors";
-import {useOrders} from "../hooks/useOrders";
 
-export default function PreviousOrder({ user }) {
+export default function PreviousOrder({ user, orders }) {
     
-    const { orders } = useOrders(user?.id);
-
     const previousOrders = (orders || []).filter(order =>
         ["Cancelled", "Checked_in", "Late"].includes(order.borrow_status)
     );
