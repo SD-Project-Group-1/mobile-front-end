@@ -59,7 +59,7 @@ export default function OrderStatus({ user, orders, refreshOrders, onActiveOrder
                 <View style={styles.header}>
                     <View style={styles.headerLeft}>
                         <Text style={styles.headerLabel}>ORDER PLACED:</Text>
-                        <Text style={styles.headerValue}>{new Date(activeOrder.borrow_date).toLocaleDateString('default', { 
+                        <Text style={styles.headerValue}>{new Date().toLocaleDateString('default', { 
                             month: 'long', 
                             day: '2-digit', 
                             year: 'numeric' })}
@@ -75,7 +75,7 @@ export default function OrderStatus({ user, orders, refreshOrders, onActiveOrder
                             {activeOrder?.borrow_status === 'Submitted'
                                 ? 'Pending Review'
                                 : activeOrder?.borrow_status === 'Scheduled'
-                                    ? 'Ready for Pickup'
+                                    ? `Pickup: ${activeOrder.borrow_date ? new Date(activeOrder.borrow_date).toLocaleString('default', { month: 'long', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''}`
                                     : `Return by ${new Date(activeOrder.return_date).toLocaleString('default', {
                                         month: 'long',
                                         day: '2-digit',
@@ -153,11 +153,13 @@ export default function OrderStatus({ user, orders, refreshOrders, onActiveOrder
                     <Modal
                         visible={confirmCancelModal}
                         size="regular"
-                        title={activeOrder?.borrow_status === "Checked_out"
+                        title={['Checked_out', 'Scheduled'].includes(activeOrder?.borrow_status)
                             ? "Error: Your order cannot be cancelled!"
                             : "Success"}
-                        message={activeOrder?.borrow_status === "Checked_out"
-                            ? "You are currently in possession of a borrowed device."
+                        message={['Checked_out', 'Scheduled'].includes(activeOrder?.borrow_status)
+                            ? (activeOrder?.borrow_status === 'Checked_out'
+                                ? "You are currently in possession of a borrowed device."
+                                : "Your order is already scheduled and cannot be cancelled.")
                             : "Your order has been cancelled."}
                         onClose={closeModal}
                         setTime={3000}
