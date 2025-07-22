@@ -4,14 +4,19 @@ import {Colors} from "../constants/Colors";
 import {zipcodeAPI} from "../api/zipcode";
 import {locationAPI} from "../api/request";
 import {deviceAPI} from "../api/request";
+import Dropdown from "./ui/Dropdown";
+import Button from "./ui/Button";
 
-export default function PickupDetails({ user, setFoundLocation, matchedLocation }) {
+export default function PickupDetails({ user, setFoundLocation, matchedLocation, borrowDate }) {
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedTime, setSelectedTime] = useState(null);
     const [inRange, setInRange] = useState(null);
     const [nearestCenter, setNearestCenter] = useState('');
     const [zipcodeChecked, setZipcodeChecked] = useState(false);
     const [locationModal, setLocationModal] = useState(false);
     const [availableLocations, setAvailableLocations] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [pickupTimeModal, setPickupTimeModal] = useState(false);
 
     // Get user zipcode, check if it's in range, and returns the nearest location
     useEffect(() => {
@@ -113,6 +118,39 @@ export default function PickupDetails({ user, setFoundLocation, matchedLocation 
         setLocationModal(false);
     };
 
+    // Pick up date options
+    const date = () => {
+        const options = [];
+        const today = new Date();
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(today);
+            date.setDate(today.getDate() + i);
+            options.push({
+                label: date.toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' }),
+                value: date.toISOString().split('T')[0],
+            });
+        }
+        return options;
+    };
+
+    // Pick up time options
+    const time = () => {
+        const options = [];
+        for (let hour = 8; hour <= 18; hour++) { // 8am to 6:45pm
+            for (let min of [0, 15, 30, 45]) {
+                const date = new Date();
+                date.setHours(hour, min, 0, 0);
+                let hour12 = hour % 12 === 0 ? 12 : hour % 12;
+                let ampm = hour < 12 ? 'AM' : 'PM';
+                options.push({
+                    label: `${hour12.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')} ${ampm}`,
+                    value: `${hour12.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')} ${ampm}`
+                });
+            }
+        }
+        return options;
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.pickupDetails}>
@@ -144,7 +182,19 @@ export default function PickupDetails({ user, setFoundLocation, matchedLocation 
                         <Text style={[styles.carryoutLocation, {marginBottom: 0}]}>
                             Address: {matchedLocation?.street_address || 'Address not available'}, {matchedLocation?.city || ''}, {matchedLocation?.state || ''} {matchedLocation?.zip_code || ''}
                         </Text>
-                        
+
+                        <View style={styles.pickupTimeRow}>
+                            <Text style={styles.carryoutLocation}>Pick up time: </Text>
+                            <TouchableOpacity 
+                                style={{marginBottom: 10}} 
+                                onPress={() => setPickupTimeModal(true)}>
+                                <Text style={styles.changeButton}>
+                                    {selectedDate && selectedTime
+                                        ? `${date().find(d => d.value === selectedDate)?.label}, ${selectedTime}`
+                                        : 'Choose Pickup Date and Time'}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
                     </>
                 )}
 
@@ -203,6 +253,60 @@ export default function PickupDetails({ user, setFoundLocation, matchedLocation 
                                 )}
                             </ScrollView>
                         )}
+                    </Pressable>
+                </Pressable>
+            </Modal>
+            {/* Pickup Time Modal */}
+            <Modal
+                visible={pickupTimeModal}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setPickupTimeModal(false)}
+            >
+                <Pressable style={styles.overlay} onPress={() => setPickupTimeModal(false)}>
+                    <Pressable style={styles.modalContainer} onPress={(event) => event.stopPropagation()}>
+                        <View style={styles.modalHeader}>
+                            <Text style={styles.modalTitle}>Select Pickup Date & Time</Text>
+                            <TouchableOpacity onPress={() => setPickupTimeModal(false)}>
+                                <Text style={styles.closeButton}>✕</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{padding: 20}}>
+                            <Text style={styles.modalLabel}>Date:</Text>
+                            <Dropdown
+                                data={date()}
+                                placeholder="Select date"
+                                selectedValue={selectedDate}
+                                onSelect={item => setSelectedDate(typeof item === 'object' ? item.value : item)}
+                            />
+                            <Text style={styles.modalLabel}>Time:</Text>
+                            <Dropdown
+                                data={time()}
+                                placeholder="Select time"
+                                selectedValue={selectedTime}
+                                onSelect={item => setSelectedTime(typeof item === 'object' ? item.value : item)}
+                            />
+                            <Button
+                                title="Confirm"
+                                onPress={() => {
+                                    setPickupTimeModal(false);
+                                    if (selectedDate && selectedTime && borrowDate) {
+                                        const [hourMin, ampm] = selectedTime.split(' ');
+                                        let [hour, min] = hourMin.split(':');
+                                        hour = parseInt(hour, 10);
+                                        min = parseInt(min, 10);
+                                        if (ampm === 'PM' && hour !== 12) hour += 12;
+                                        if (ampm === 'AM' && hour === 12) hour = 0;
+                                        const localDateTime = `${selectedDate}T${hour.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')}:00`;
+                                        borrowDate(localDateTime);
+                                    }
+                                }}
+                                disabled={!selectedDate || !selectedTime}
+                                style={{ height: '45', marginTop: 30 }}
+                                textStyle={{ fontSize: 16, fontWeight: 'bold' }}
+                                
+                            />
+                        </View>
                     </Pressable>
                 </Pressable>
             </Modal>
@@ -320,5 +424,18 @@ const styles = StyleSheet.create({
     noLocationsText: {
         color: Colors.default.textWhite,
         fontSize: 14,
+    },
+    /* Pickup Time Modal */
+    pickupTimeRow: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        marginTop: 10,
+    },
+    modalLabel: {
+        color: Colors.default.titlesSelected,
+        fontSize: 16,
+        marginBottom: 8,
+        marginTop: 12,
     },
 });

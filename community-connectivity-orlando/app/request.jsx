@@ -15,6 +15,7 @@ export default function Request() {
     const [selectedReason, setSelectedReason] = useState('');
     const [selectedDevice, setSelectedDevice] = useState('');
     const [foundLocation, setFoundLocation] = useState('');
+    const [chosenBorrowDate, setChosenBorrowDate] = useState(null);
 
     const date = new Date();
     const borrowDate = new Date(date.getTime() - (4 * 60 * 60 * 1000));
@@ -105,7 +106,7 @@ export default function Request() {
             const borrowData = {
                 user_id: data.userId,
                 device_id: null,
-                borrow_date: data.borrow_date,
+                borrow_date: chosenBorrowDate,
                 return_date: null,
                 user_location: data.user_location,
                 location_id: matchedLocation.location_id,
@@ -135,6 +136,7 @@ export default function Request() {
                 user={user}
                 setFoundLocation={setFoundLocation}
                 matchedLocation={matchedLocation}
+                borrowDate={setChosenBorrowDate}
             />
 
             <ScrollView style={styles.scrollView}>
