@@ -16,10 +16,12 @@ export default function Request() {
     const [selectedDevice, setSelectedDevice] = useState('');
     const [foundLocation, setFoundLocation] = useState('');
 
+    const date = new Date();
+    const borrowDate = new Date(date.getTime() - (4 * 60 * 60 * 1000));
     const { handleSubmit, reset, setValue } = useForm({
         defaultValues: {
             userId: '',
-            borrow_date: new Date().toISOString().split('T')[0],
+            borrow_date: borrowDate.toISOString(),
             user_location: '',
             device_location: '',
             reason_for_borrow: selectedReason,
@@ -121,7 +123,7 @@ export default function Request() {
             console.error('Error response:', error.response?.data);
             Alert.alert(
                 'Request Failed',
-                error.response?.data || 'Failed to submit borrow request. Please try again.'
+                'Device unavailable at selected location or borrow request failed. Please try a different location or try again.'
             );
         }
     };

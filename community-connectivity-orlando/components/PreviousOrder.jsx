@@ -16,7 +16,10 @@ export default function PreviousOrder({ user, orders }) {
                         <View style={styles.header}>
                             <View style={styles.headerLeft}>
                                 <Text style={styles.headerLabel}>ORDER PLACED:</Text>
-                                <Text style={styles.headerValue}>{order.borrow_date.slice(0, 10)}</Text>
+                                <Text style={styles.headerValue}>{new Date(order.borrow_date).toLocaleDateString('default', { 
+                                    month: 'long', 
+                                    day: '2-digit', 
+                                    year: 'numeric' })}</Text>
                             </View>
                             <View style={styles.headerRight}>
                                 <Text style={styles.headerLabel}>ORDER #:</Text>

@@ -69,31 +69,6 @@ export default function SignUp() {
         }
     };
 
-    const formatDOB = (dob) => {
-        if (!dob) return '';
-        const splitDOB = dob.split('.');
-        if (splitDOB.length === 3) {
-            const month = splitDOB[0].padStart(2, '0');
-            const day = splitDOB[1].padStart(2, '0');
-            const year = splitDOB[2];
-            return `${month}-${day}-${year}`;
-        }
-        return dob;
-    };
-
-    const formatPhoneNum = (number) => {
-        if (!number) return '';
-        const splitPhone = number.split('.');
-        if (splitPhone.length === 3) {
-            const areaCode = splitPhone[0];
-            const middle = splitPhone[1];
-            const last = splitPhone[2];
-            return `${areaCode}-${middle}-${last}`;
-        }
-        return number;
-    };
-    
-
     return (
         <View style={styles.container}>
             <KeyboardAvoidingView
@@ -217,9 +192,14 @@ export default function SignUp() {
                                 <TextInput
                                     style={[styles.input, errors.formDOB && styles.inputError]}
                                     onBlur={onBlur}
-                                    onChangeText={(dob) => onChange(formatDOB(dob))}
+                                    onChangeText={(dob) => {
+                                       const dash = dob.replace(/\./g, '-');
+                                        if (/^[\d.-]{0,10}$/.test(dob)) {
+                                            onChange(dash);
+                                        }
+                                    }}
                                     value={value}
-                                    placeholder="mm-dd-yyyy (use 01.01.1990)"
+                                    placeholder="mm-dd-yyyy (use . as -)"
                                     keyboardType="numeric"
                                     minLength={10}
                                     maxLength={10}
@@ -230,9 +210,7 @@ export default function SignUp() {
                                 )}
                             </View>
                         )}
-
                     />
-
 
                     {/* Phone Field */}
                     <Controller
@@ -250,13 +228,18 @@ export default function SignUp() {
                                 <TextInput
                                     style={[styles.input, errors.formPhoneNum && styles.inputError]}
                                     onBlur={onBlur}
-                                    onChangeText={(number) => onChange(formatPhoneNum(number))}
+                                    onChangeText={(number) => {
+                                        if (/^[\d.-]{0,12}$/.test(number)) {
+                                            const dash = number.replace(/\./g, '-');
+                                            onChange(dash);
+                                        }
+                                    }}
                                     value={value}
-                                    placeholder="Phone Number (use 123.456.7890)"
+                                    placeholder="Phone Number (use . as -)"
                                     keyboardType="numeric"
                                     placeholderTextColor="gray"
-                                    maxLength={14}
-                                    minLength={14}
+                                    maxLength={12}
+                                    minLength={12}
                                 />
                                 {errors.formPhoneNum && (
                                     <Text style={[styles.errorText, {marginTop: 15}]}>{errors.formPhoneNum.message}</Text>

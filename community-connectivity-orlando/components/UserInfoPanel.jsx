@@ -48,7 +48,7 @@ export default function UserInfoPanel({ user, isVerified, profilePic, loading })
             <Text style={styles.text}>{profileData.address}</Text>
             <Text style={styles.text}>{profileData.phoneNumber}</Text>
             <Text style={styles.text}>{profileData.email}</Text>
-            <Text style={styles.text}>{profileData.is_verified}</Text>
+            <Text style={{...styles.text, fontFamily: 'InstrumentSans-Bold'}}>{profileData.is_verified}</Text>
         </View>
     );
 }
