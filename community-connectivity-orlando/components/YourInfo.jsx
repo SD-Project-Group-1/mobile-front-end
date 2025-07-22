@@ -38,7 +38,7 @@ export default function YourInfo({ user, selectedReason, setSelectedReason, sele
         availability();
     }, [locationId]);
 
-    // Build dropdown data with availability info
+    // Build dropdown data with availability info, tells user how many devices are available
     const deviceDropdownCount = devices.map(type => {
         const count = deviceAvailability[type];
         return {

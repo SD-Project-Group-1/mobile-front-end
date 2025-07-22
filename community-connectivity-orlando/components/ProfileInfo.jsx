@@ -42,7 +42,10 @@ export default function ProfileInfo(props) {
                 lastName: user.last_name || '',
                 phoneNumber: user.phone || '',
                 birthdate: user.dob ? user.dob.split('T')[0].split('-').slice(1).join('-') + '-' + user.dob.split('T')[0].split('-')[0] : '',
-                address: addressField(user),
+                address: user.street_address || '',
+                city: user.city || '',
+                state: user.state || '',
+                zipCode: user.zip_code || '',
                 email: user.email || '',
                 id: user.id || ''
             };
@@ -57,8 +60,9 @@ export default function ProfileInfo(props) {
 
     // Check for active reservations
     useEffect(() => {
-        // If there is an active reservation or device rental, set hasActiveReservation to true
-        if (orders && orders.length > 0) {
+        // Only consider orders with active statuses
+        const orderStatus = ["Submitted", "Scheduled", "Checked_out"];
+        if (orders && orders.some(order => orderStatus.includes(order.borrow_status))) {
             setHasActiveReservation(true);
         } else {
             setHasActiveReservation(false);
@@ -182,9 +186,6 @@ export default function ProfileInfo(props) {
     // Save profile changes to profile and exit editing mode
     const saveProfileUpdate = async () => {
         try {
-            // Seperate address field (address, city, state, zip code)
-            const address = editField.address.split(',').map(part => part.trim());
-            
             // Send data to backend via API
             const updateData = {
                 first_name: editField.firstName,
@@ -192,16 +193,13 @@ export default function ProfileInfo(props) {
                 phone: editField.phoneNumber,
                 email: editField.email,
                 dob: editField.birthdate,
-                street_address: address[0] || '',
-                city: address[1] || '',
-                state: address[2] || '',
-                zip_code: address[3] || ''
+                street_address: editField.address,
+                city: editField.city,
+                state: editField.state,
+                zip_code: editField.zipCode
             };
-
             // update user profile to backend
             await userAPI.updateUserProfile(userData.id, updateData);
-            
-            // Update user data in profile
             setUserData(editField);
             setEditProfile(false);
             
@@ -288,44 +286,103 @@ export default function ProfileInfo(props) {
                             style={getFieldStyle('phoneNumber')}
                             value={editProfile ? editField.phoneNumber : userData.phoneNumber}
                             editable={isFieldEditable('phoneNumber')}
-                            onChangeText={(value) => updateProfile('phoneNumber', value)}
+                            onChangeText={(value) => {
+                                const dash = value.replace(/\./g, '-');
+                                if (/^[\d.-]{0,12}$/.test(value)) {
+                                    updateProfile('phoneNumber', dash);
+                                }
+                            }}
+                            maxLength={12}
                             onPressIn={() => editProfile && !isFieldEditable('phoneNumber') && editFieldModal('phoneNumber')}
-                            keyboardType="phone-pad"
+                            keyboardType="numeric"
                         />
                         <TextInput
                             style={getFieldStyle('birthdate')}
                             value={editProfile ? editField.birthdate : userData.birthdate}
                             editable={isFieldEditable('birthdate')}
-                            onChangeText={(value) => updateProfile('birthdate', value)}
+                            onChangeText={(value) => {
+                                const dash = value.replace(/\./g, '-');
+                                if (/^[\d.-]{0,10}$/.test(value)) {
+                                    updateProfile('birthdate', dash);
+                                }
+                            }}
+                            maxLength={10}
                             onPressIn={() => editProfile && !isFieldEditable('birthdate') && editFieldModal('birthdate')}
                             keyboardType="numeric"
                         />
                     </View>
 
                     {/* Address Field */}
-                    <View style={styles.row}>
-                        <Text style={styles.title}>Address</Text>
-                    </View>
-                    <View style={styles.row}>
-                        <TextInput
-                            style={getFieldStyle('address')}
-                            value={editProfile ? editField.address : userData.address}
-                            editable={isFieldEditable('address')}
-                            onChangeText={(value) => updateProfile('address', value)}
-                            onPressIn={() => editProfile && !isFieldEditable('address') && editFieldModal('address')}
-                        />
-                    </View>
-                    
-                    {/* Email edit field shown when editing profile */}
+                    {!editProfile && (
+                        <>
+                            <View style={styles.row}>
+                                <Text style={styles.title}>Address</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <Text style={styles.textBox}>{[userData.address, userData.city, userData.state, userData.zipCode].filter(Boolean).join(', ')}</Text>
+                            </View>
+                        </>
+                    )}
                     {editProfile && (
                         <>
+                            <View style={styles.row}>
+                                <Text style={styles.title}>Street Address</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <TextInput
+                                    style={getFieldStyle('address')}
+                                    value={editField.address}
+                                    editable={isFieldEditable('address')}
+                                    onChangeText={(value) => updateProfile('address', value)}
+                                    onPressIn={() => editProfile && !isFieldEditable('address') && editFieldModal('address')}
+                                />
+                            </View>
+                            <View style={styles.row}>
+                                <Text style={styles.title}>City</Text>
+                                <Text style={styles.title}>State</Text>
+                                <Text style={styles.title}>Zip Code</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <TextInput
+                                    style={getFieldStyle('city')}
+                                    value={editField.city}
+                                    editable={isFieldEditable('city')}
+                                    onChangeText={(value) => updateProfile('city', value)}
+                                />
+                                <TextInput
+                                    style={getFieldStyle('state')}
+                                    value={editField.state}
+                                    editable={isFieldEditable('state')}
+                                    onChangeText={(value) => {
+                                        const caps = value.toUpperCase();
+                                        if (/^[A-Z]{0,2}$/.test(caps)) {
+                                            updateProfile('state', caps);
+                                        }
+                                    }}
+                                    maxLength={2}
+                                />
+                                <TextInput
+                                    style={getFieldStyle('zipCode')}
+                                    value={editField.zipCode}
+                                    editable={isFieldEditable('zipCode')}
+                                    onChangeText={(value) => {
+                                        if (/^\d{0,5}$/.test(value)) {
+                                            updateProfile('zipCode', value);
+                                        }
+                                    }}
+                                    keyboardType="numeric"
+                                    maxLength={5}
+                                />
+                            </View>
+
+                            {/* Email field */}
                             <View style={styles.row}>
                                 <Text style={styles.title}>Email</Text>
                             </View>
                             <View style={styles.row}>
                                 <TextInput
                                     style={getFieldStyle('email')}
-                                    value={editProfile ? editField.email : userData.email}
+                                    value={editField.email}
                                     editable={isFieldEditable('email')}
                                     onChangeText={(value) => updateProfile('email', value)}
                                     onPressIn={() => editProfile && !isFieldEditable('email') && editFieldModal('email')}
@@ -333,7 +390,7 @@ export default function ProfileInfo(props) {
                             </View>
                         </>
                     )}
-
+                    
                     {/* Edit Profile buttons shown when editing account */}
                     {editProfile && (
                         <View style={[styles.rowButton, {marginTop: 10}]}>
