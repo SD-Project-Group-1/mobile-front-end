@@ -13,6 +13,7 @@ export default function PickupDetails({ user, setFoundLocation, matchedLocation 
     const [availableLocations, setAvailableLocations] = useState([]);
     const [loading, setLoading] = useState(false);
 
+    // Get user zipcode, check if it's in range, and returns the nearest location
     useEffect(() => {
         const checkRange = async () => {
             if (zipcodeChecked) {
@@ -48,9 +49,17 @@ export default function PickupDetails({ user, setFoundLocation, matchedLocation 
         checkRange();
     }, [user?.zip_code, zipcodeChecked, setFoundLocation]);
 
+    // Get all locations with available devices
     useEffect(() => {
         if (inRange === true) {
-            dropDownLocations();
+            dropDownLocations().then((locations) => {
+                if (locations && locations.length > 0) {
+                    // If the current foundLocation is not in the available locations, set the first one
+                    if (!locations.some(loc => loc.location_nickname === matchedLocation?.location_nickname)) {
+                        setFoundLocation(locations[0].location_nickname);
+                    }
+                }
+            });
         }
     }, [inRange]);
 
@@ -61,7 +70,7 @@ export default function PickupDetails({ user, setFoundLocation, matchedLocation 
             
             if (!locationData || !locationData.data || !Array.isArray(locationData.data)) {
                 setAvailableLocations([]);
-                return;
+                return [];
             }
 
             const locationsWithDevices = [];
@@ -88,9 +97,11 @@ export default function PickupDetails({ user, setFoundLocation, matchedLocation 
             }
             
             setAvailableLocations(locationsWithDevices);
+            return locationsWithDevices;
         } catch (error) {
             console.error('Failed to load available locations:', error);
             setAvailableLocations([]);
+            return [];
         } finally {
             setLoading(false);
         }
@@ -130,7 +141,7 @@ export default function PickupDetails({ user, setFoundLocation, matchedLocation 
                         <Text style={styles.carryoutLocation}>
                             Carry out at: {matchedLocation?.location_nickname || 'No devices or locations available'}
                         </Text>
-                        <Text style={styles.carryoutLocation}>
+                        <Text style={[styles.carryoutLocation, {marginBottom: 0}]}>
                             Address: {matchedLocation?.street_address || 'Address not available'}, {matchedLocation?.city || ''}, {matchedLocation?.state || ''} {matchedLocation?.zip_code || ''}
                         </Text>
                         

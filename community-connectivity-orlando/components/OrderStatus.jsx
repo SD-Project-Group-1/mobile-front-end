@@ -59,7 +59,11 @@ export default function OrderStatus({ user, orders, refreshOrders, onActiveOrder
                 <View style={styles.header}>
                     <View style={styles.headerLeft}>
                         <Text style={styles.headerLabel}>ORDER PLACED:</Text>
-                        <Text style={styles.headerValue}>{activeOrder.borrow_date.slice(0, 10)}</Text>
+                        <Text style={styles.headerValue}>{new Date(activeOrder.borrow_date).toLocaleDateString('default', { 
+                            month: 'long', 
+                            day: '2-digit', 
+                            year: 'numeric' })}
+                        </Text>
                     </View>
                     <View style={styles.headerRight}>
                         <Text style={styles.headerLabel}>ORDER #:</Text>
@@ -70,10 +74,12 @@ export default function OrderStatus({ user, orders, refreshOrders, onActiveOrder
                         <Text style={styles.returnText}>
                             {activeOrder?.borrow_status === 'Submitted'
                                 ? 'Pending Review'
-                                : `Return by ${new Date(activeOrder.return_date).toLocaleString('default', {
-                                    month: 'long',
-                                    day: '2-digit',
-                                    year: 'numeric'
+                                : activeOrder?.borrow_status === 'Scheduled'
+                                    ? 'Ready for Pickup'
+                                    : `Return by ${new Date(activeOrder.return_date).toLocaleString('default', {
+                                        month: 'long',
+                                        day: '2-digit',
+                                        year: 'numeric'
                                 })}`}
                         </Text>
 
@@ -82,6 +88,21 @@ export default function OrderStatus({ user, orders, refreshOrders, onActiveOrder
                         Device: {activeOrder.device ? `${activeOrder.device.brand || ''} ${activeOrder.device.make || ''} ${activeOrder.device.model || ''}`.trim() : 'Device name not available'}
                     </Text>
                     <Text style={styles.deviceInfo}>Device ID: {activeOrder.device_id}</Text>
+                    <Text style={[styles.deviceInfo, {marginTop: 10}, {fontWeight: 'bold'}]}>Pickup Location:</Text>
+                    <Text style={styles.deviceInfo}>
+                      {
+                        activeOrder.device && activeOrder.device.location && activeOrder.device.location.location_nickname
+                          ? activeOrder.device.location.location_nickname
+                          : 'Location not available'
+                      }
+                    </Text>
+                    <Text style={styles.deviceInfo}>
+                      {
+                        activeOrder.device && activeOrder.device.location && activeOrder.device.location.street_address
+                          ? `${activeOrder.device.location.street_address}, ${activeOrder.device.location.city}, ${activeOrder.device.location.state} ${activeOrder.device.location.zip_code}`
+                          : 'Address not available'
+                      }
+                    </Text>
                 </View>
                 <View style={styles.buttonRow}>
                     <Button

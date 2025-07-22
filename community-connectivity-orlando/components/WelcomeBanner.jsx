@@ -98,6 +98,7 @@ export default function WelcomeBanner() {
 
 const styles = StyleSheet.create({
     container: {
+        marginTop: 25,
         padding: 15,
     },
     banner: {
