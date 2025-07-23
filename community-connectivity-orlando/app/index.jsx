@@ -397,7 +397,7 @@ export default function SignUp() {
                     onPress={handleSubmit(onSubmit)}
                 />
                 <View style={styles.row}>
-                    <Text style={styles.link}>
+                    <Text style={[styles.link, {color: Colors.default.textWhite}]}>
                         Already have an account?
                     </Text>
 

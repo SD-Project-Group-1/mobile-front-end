@@ -102,17 +102,17 @@ export default function ResetPassword(){
                                 </View>
                             )}
                         />
+                        <Button
+                            title={sending ? "Sending..." : "Send Reset Email"}
+                            onPress={handleSubmit(onSubmit)}
+                            fullWidth
+                            height={50}
+                            style={styles.buttonSpacing}
+                            disabled={sending}
+                        />
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
-            <Button
-                title={sending ? "Sending..." : "Send Reset Email"}
-                onPress={handleSubmit(onSubmit)}
-                fullWidth
-                height={50}
-                style={styles.buttonSpacing}
-                disabled={sending}
-            />
         </View>
     );
 }

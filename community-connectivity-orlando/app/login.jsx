@@ -121,7 +121,7 @@ export default function Login() {
 
                 {/* Sign Up Link */}
                 <View style={styles.row}>
-                    <Text style={styles.link}>
+                    <Text style={[styles.link, {color: Colors.default.textWhite}]}>
                         Don't have an account?
                     </Text>
                     <TouchableOpacity onPress={() => router.push('/')}>
