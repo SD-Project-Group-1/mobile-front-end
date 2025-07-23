@@ -40,5 +40,29 @@ export default {
                 projectId: process.env.EXPO_PROJECT_ID,
             }
         },
+        hooks: {
+            postPublish: [
+                {
+                    file: "sentry-expo/upload-sourcemaps",
+                    config: {
+                        organization: "Team-One",
+                        project: "Community-Connectivity-Orlando",
+                    },
+                },
+            ],
+        },
+        plugins: [
+            [
+                "expo-build-properties",
+                {
+                    ios: {
+                        enableProguardInReleaseBuilds: true,
+                    },
+                    android: {
+                        enableProguardInReleaseBuilds: true,
+                    },
+                },
+            ],
+        ]
     }
 };

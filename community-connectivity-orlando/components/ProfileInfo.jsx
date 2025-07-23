@@ -7,6 +7,8 @@ import { router } from 'expo-router';
 import { userAPI } from '../api/user';
 import { authAPI } from '../api/auth';
 import * as SecureStore from 'expo-secure-store';
+import { useNavigation } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 
 export default function ProfileInfo(props) {
     const { user, orders, onSave, loading } = props;
@@ -33,6 +35,8 @@ export default function ProfileInfo(props) {
     // Modal popups for delete account and confirm delete buttons
     const [deleteAccountModal, setDeleteAccountModal] = useState(false);
     const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
+
+    const navigation = useNavigation();
 
     // Retrieves user profile data and updates user data
     useEffect(() => {
@@ -134,8 +138,12 @@ export default function ProfileInfo(props) {
     const logout = async () => {
         // Backend signout endpoint and clear token
         await authAPI.signout();
-            
-        router.push('/login');
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'login' }],
+            })
+        );
     };
     
     // Confirm delete account
@@ -158,6 +166,13 @@ export default function ProfileInfo(props) {
             
             // Shows success modal
             setConfirmDeleteModal(true);
+
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'login' }],
+                })
+            );
             
         } catch (error) {
             console.error('Error deleting account:', error);
